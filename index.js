@@ -60,6 +60,8 @@ mapArray.forEach((row, y) => {
   });
 });
 
+/* data mockup */
+
 const lista = [
   "jauhoja",
   "perunoita",
@@ -69,6 +71,7 @@ const lista = [
   "maitoa",
 ];
 
+/* helper func */
 const getAdjacentEmptySpace = (x, y) => {
   const candidates = [
     [x - 1, y],
