@@ -64,7 +64,6 @@ class Map {
   addWaypoint(x, y) {
     try {
       this.checkBounds(x, y);
-      console.log(x, y);
       this.drawFeature(
         {
           border: "1px dashed green",
