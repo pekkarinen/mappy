@@ -3,22 +3,9 @@
  */
 
 import { Map } from "./map.js";
+import { Feature } from "./items.js";
 
 const app = document.querySelector("#app");
-
-class Thing {
-  constructor(name, description) {
-    this.name = name;
-    this.description = description;
-  }
-}
-
-class Feature extends Thing {
-  constructor(name, description, backgroundColor) {
-    super(name, description);
-    this.backgroundColor = backgroundColor;
-  }
-}
 
 const mapConfig = {
   height: 10,
@@ -50,6 +37,10 @@ const mapArray = [
   [0, 0, 2, 1, 1, 0, 1, 0, 1, e],
 ];
 
+const walkableMatrix = [
+  mapArray.map((row) => row.map((column) => column === 0)),
+];
+
 mapArray.forEach((row, y) => {
   row.forEach((column, x) => {
     if (typeof column === "number") {
@@ -72,15 +63,15 @@ const lista = [
 ];
 
 /* helper func */
-const getAdjacentEmptySpace = (x, y) => {
-  const candidates = [
+const getAdjacentSpaces = (x, y) => {
+  const adjacentTiles = [
     [x - 1, y],
     [x + 1, y],
     [x, y - 1],
     [x, y + 1],
   ];
 
-  const emptyCandidates = candidates.filter(([cx, cy]) => {
+  const adjacentSpaces = adjacentTiles.filter(([cx, cy]) => {
     return (
       cx >= 0 &&
       cx < mapArray[0].length &&
@@ -89,21 +80,27 @@ const getAdjacentEmptySpace = (x, y) => {
       mapArray[cy][cx] === 0
     );
   });
+  return adjacentSpaces;
+};
 
-  if (emptyCandidates.length > 0) {
-    return emptyCandidates[Math.floor(Math.random() * emptyCandidates.length)];
-  } else {
-    getAdjacentEmptySpace(x, y);
-  }
+const getRandomEmptySpace = (x, y) => {
+  const emptyAdjacentSpaces = getAdjacentSpaces(x, y);
+  return emptyAdjacentSpaces[
+    Math.floor(Math.random() * emptyAdjacentSpaces.length)
+  ];
 };
 
 const validLocs = mapArray
-  .flatMap((row, y) => row.map((column, x) => (column > 0 ? [x, y] : null)))
+  .flatMap((row, y) =>
+    row.map((column, x) =>
+      column > 0 && getAdjacentSpaces(x, y).length > 0 ? [x, y] : null
+    )
+  )
   .filter((coord) => coord !== null);
 
 const treasures = lista.map((item) => {
   const victim = Math.floor(Math.random() * validLocs.length);
-  const treasure = getAdjacentEmptySpace(...validLocs.splice(victim, 1)[0]);
+  const treasure = getRandomEmptySpace(...validLocs.splice(victim, 1)[0]);
   return treasure;
 });
 
