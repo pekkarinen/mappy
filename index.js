@@ -59,3 +59,51 @@ mapArray.forEach((row, y) => {
     }
   });
 });
+
+const lista = [
+  "jauhoja",
+  "perunoita",
+  "sokeria",
+  "omenoita",
+  "sukat",
+  "maitoa",
+];
+
+const getAdjacentEmptySpace = (x, y) => {
+  const candidates = [
+    [x - 1, y],
+    [x + 1, y],
+    [x, y - 1],
+    [x, y + 1],
+  ];
+
+  const emptyCandidates = candidates.filter(([cx, cy]) => {
+    return (
+      cx >= 0 &&
+      cx < mapArray[0].length &&
+      cy >= 0 &&
+      cy < mapArray.length &&
+      mapArray[cy][cx] === 0
+    );
+  });
+
+  if (emptyCandidates.length > 0) {
+    return emptyCandidates[Math.floor(Math.random() * emptyCandidates.length)];
+  } else {
+    getAdjacentEmptySpace(x, y);
+  }
+};
+
+const validLocs = mapArray
+  .flatMap((row, y) => row.map((column, x) => (column > 0 ? [x, y] : null)))
+  .filter((coord) => coord !== null);
+
+const treasures = lista.map((item) => {
+  const victim = Math.floor(Math.random() * validLocs.length);
+  const treasure = getAdjacentEmptySpace(...validLocs.splice(victim, 1)[0]);
+  return treasure;
+});
+
+treasures.forEach((waypoint) => {
+  map.addWaypoint(waypoint[0], waypoint[1]);
+});
