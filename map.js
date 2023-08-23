@@ -61,6 +61,24 @@ class Map {
     }
   }
 
+  addWaypoint(x, y) {
+    try {
+      this.checkBounds(x, y);
+      console.log(x, y);
+      this.drawFeature(
+        {
+          border: "1px dashed green",
+          backgroundColor: "rgba(120,250,160,0.3)",
+          className: "treasure",
+        },
+        x,
+        y
+      );
+    } catch (e) {
+      console.error(e.message);
+    }
+  }
+
   drawFeature(feature, x, y) {
     try {
       this.checkMap();
