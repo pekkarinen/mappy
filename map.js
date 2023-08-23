@@ -87,7 +87,7 @@ class Map {
         boxSizing: "border-box",
         position: "absolute",
         backgroundColor: feature.backgroundColor,
-        border: "1px solid darkgray",
+        border: feature.border ? feature.border : "1px solid darkgray",
         width: `${this.tileSize}px`,
         height: `${this.tileSize}px`,
         left: `${x * this.tileSize}px`,
