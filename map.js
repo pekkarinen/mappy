@@ -93,6 +93,7 @@ class Map {
         left: `${x * this.tileSize}px`,
         top: `${y * this.tileSize}px`,
       };
+      featureObj.className = feature.className || "feature";
       Object.assign(featureObj.style, featureStyle);
       this.DOMObject.append(featureObj);
     } catch (e) {
