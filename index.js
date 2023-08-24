@@ -43,9 +43,9 @@ const walkableMatrix = [
 
 mapArray.forEach((row, y) => {
   row.forEach((column, x) => {
-    if (typeof column === "number") {
+    if (typeof column === "number" && column > 0) {
       map.addFeature(mapFeatures[column], { x, y });
-    } else {
+    } else if (typeof column === "object") {
       map.addFeature(column, { x, y });
     }
   });
