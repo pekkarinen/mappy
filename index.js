@@ -125,19 +125,31 @@ const removeWaypoints = () => {
 };
 
 (function addWaypointsUI() {
+  const waypointUI = document.createElement("section");
+  waypointUI.className = "waypoint-ui";
+
   const addButton = document.createElement("button");
   addButton.innerText = "add waypoints";
   addButton.addEventListener("click", () => {
     addRandomWaypoints();
+    waypointCounter.innerText = map.waypoints.length;
   });
 
-  app.append(addButton);
+  waypointUI.append(addButton);
 
   const removeButton = document.createElement("button");
   removeButton.innerText = "remove waypoints";
   removeButton.addEventListener("click", () => {
     removeWaypoints();
+    waypointCounter.innerText = map.waypoints.length;
   });
 
-  app.append(removeButton);
+  waypointUI.append(removeButton);
+
+  const waypointCounter = document.createElement("div");
+  waypointCounter.classList.add("waypoint-counter");
+
+  waypointUI.append(waypointCounter);
+
+  app.append(waypointUI);
 })();
