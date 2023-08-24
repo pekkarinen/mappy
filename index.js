@@ -104,7 +104,21 @@ const getRandomEmptySpace = (x, y) => {
   ];
 };
 
-const addRandomWaypoints = () => {
+const getRandomItems = (array, count) => {
+  const items = [];
+  const usedIndices = [];
+  while (items.length < count) {
+    const index = Math.floor(Math.random() * array.length);
+    const randomItem = array[index];
+    if (usedIndices.indexOf(index) === -1) {
+      usedIndices.push(index);
+      items.push(randomItem);
+    }
+  }
+  return items;
+};
+
+const addRandomWaypoints = (count = 5) => {
   const validLocs = mapArray
     .flatMap((row, y) =>
       row.map((column, x) =>
@@ -113,7 +127,7 @@ const addRandomWaypoints = () => {
     )
     .filter((coord) => coord !== null);
 
-  const treasures = lista.map((item) => {
+  const treasures = getRandomItems(lista, count).map((item) => {
     const victim = Math.floor(Math.random() * validLocs.length);
     const coords = getRandomEmptySpace(
       validLocs[victim].x,
@@ -139,10 +153,19 @@ const removeWaypoints = () => {
   const waypointUI = document.createElement("section");
   waypointUI.className = "waypoint-ui";
 
+  const waypointCount = document.createElement("input");
+  waypointCount.type = "number";
+  waypointCount.value = 5;
+  waypointCount.addEventListener("change", () => {
+    if (waypointCount.value > lista.length) waypointCount.value = lista.length;
+  });
+
+  waypointUI.append(waypointCount);
+
   const addButton = document.createElement("button");
   addButton.innerText = "add waypoints";
   addButton.addEventListener("click", () => {
-    addRandomWaypoints();
+    addRandomWaypoints(waypointCount.value);
     waypointCounter.innerText = map.waypoints.length;
   });
 

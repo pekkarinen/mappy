@@ -40,9 +40,14 @@ body {
   align-items: flex-end;
 }
 
-button {
+button,
+input {
   padding: 0.5rem;
   font-family: monospace;
+}
+
+input[type="number"] {
+  width: 70px;
 }
 
 .waypoint-ui {
