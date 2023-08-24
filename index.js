@@ -63,6 +63,17 @@ const lista = [
   "piimää",
   "juustua",
   "pipot",
+  "ohraa",
+  "vehnää",
+  "herneitä",
+  "sinappi",
+  "ketsuppi",
+  "kurkkusalaatti",
+  "pasta",
+  "vihvit",
+  "nakki",
+  "makkuria",
+  "olutta",
 ];
 
 /* helper func */
