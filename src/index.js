@@ -3,6 +3,7 @@
  */
 import { Map } from "./map.js";
 import { Feature } from "./items.js";
+import { AStarFinder } from "astar-typescript";
 import "./mappy.css";
 
 const app = document.createElement("div");
@@ -38,9 +39,28 @@ const mapArray = [
   [1, 1, 2, 1, 1, 0, 1, 0, 1, e],
 ];
 
-const walkableMatrix = [
-  mapArray.map((row) => row.map((column) => column === 0)),
-];
+/* pathfinding mocks */
+const matrix = mapArray.map((row) =>
+  row.map((column) => (column === 0 || typeof column === "object" ? 0 : 1))
+);
+
+console.log(matrix);
+
+const pathFinder = new AStarFinder({
+  grid: {
+    width: 10,
+    height: 10,
+    matrix,
+  },
+});
+
+const startPos = { x: 0, y: 0 };
+const goalPos = { x: 9, y: 9 };
+
+const pathResult = pathFinder.findPath(startPos, goalPos);
+console.log("path", pathResult);
+
+/* end pathfinding */
 
 mapArray.forEach((row, y) => {
   row.forEach((column, x) => {
