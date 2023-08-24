@@ -96,8 +96,7 @@ class Map {
       const textOrder = this.getWaypointsAt(coords).length;
       const element = this.drawFeature(
         {
-          border: "1px dashed green",
-          backgroundColor: "rgba(120,250,160,0.3)",
+          border: "3px dashed green",
           className: "waypoint",
           text: name,
           textOrder,
@@ -138,8 +137,6 @@ class Map {
         left: `${coords.x * this.tileSize}px`,
         top: `${coords.y * this.tileSize}px`,
       };
-      if (feature.text) featureObj.innerText = feature.text;
-      featureObj.className = feature.className || "feature";
       if (feature.text) {
         featureObj.innerText = feature.text;
         featureObj.classList.add(`label-order-${feature.textOrder}`);
