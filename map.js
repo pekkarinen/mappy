@@ -155,7 +155,7 @@ class Map {
     mapElem.className = "map";
     const mapStyle = {
       position: "relative",
-      backgroundColor: "#efefef",
+      backgroundColor: "#e6e6e6",
       border: "1px solid black",
       width: `${this.width * this.tileSize}px`,
       height: `${this.height * this.tileSize}px`,
