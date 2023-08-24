@@ -40,12 +40,17 @@ class Map {
   }
 
   /* error handling */
-  checkBounds(x, y) {
-    if (x > this.width || y > this.height || x < 0 || y < 0) {
+  checkBounds(coords) {
+    if (
+      coords.x > this.width ||
+      coords.y > this.height ||
+      coords.x < 0 ||
+      coords.y < 0
+    ) {
       throw new Error("out of bounds!");
     }
 
-    if (x === undefined || y === undefined) {
+    if (coords.x === undefined || coords.y === undefined) {
       throw new Error("missing coords!");
     }
   }
@@ -56,13 +61,13 @@ class Map {
     }
   }
 
-  addFeature(feature, x, y) {
+  addFeature(feature, coords) {
     try {
-      this.checkBounds(x, y);
-      const element = this.drawFeature(feature, x, y);
+      this.checkBounds(coords);
+      const element = this.drawFeature(feature, coords);
       this._features.push({
         feature,
-        coords: [x, y],
+        coords,
         element,
       });
     } catch (e) {
@@ -70,9 +75,26 @@ class Map {
     }
   }
 
-  addWaypoint(name, x, y) {
+  getWaypointsAt(coords) {
+    if (
+      coords.x === undefined ||
+      coords.y === undefined ||
+      coords.x < 0 ||
+      coords.y < 0
+    ) {
+      console.error("missing or invalid coords!");
+      return;
+    }
+    return this._waypoints.filter((waypoint) => {
+      return waypoint.coords.x === coords.x && waypoint.coords.y === coords.y;
+    });
+  }
+
+  addWaypoint(name, coords) {
     try {
-      this.checkBounds(x, y);
+      this.checkBounds(coords);
+      const existingWaypoints = this.getWaypointsAt(coords);
+      console.log("existing", existingWaypoints.length);
       const element = this.drawFeature(
         {
           border: "1px dashed green",
@@ -80,11 +102,10 @@ class Map {
           className: "waypoint",
           text: name,
         },
-        x,
-        y
+        coords
       );
       this._waypoints.push({
-        coords: [x, y],
+        coords,
         name,
         element,
       });
@@ -104,9 +125,8 @@ class Map {
     }
   }
 
-  drawFeature(feature, x, y) {
+  drawFeature(feature, coords) {
     try {
-      this.checkMap();
       const featureObj = document.createElement("div");
       const featureStyle = {
         boxSizing: "border-box",
@@ -115,8 +135,8 @@ class Map {
         border: feature.border ? feature.border : "1px solid darkgray",
         width: `${this.tileSize}px`,
         height: `${this.tileSize}px`,
-        left: `${x * this.tileSize}px`,
-        top: `${y * this.tileSize}px`,
+        left: `${coords.x * this.tileSize}px`,
+        top: `${coords.y * this.tileSize}px`,
       };
       if (feature.text) featureObj.innerText = feature.text;
       featureObj.className = feature.className || "feature";

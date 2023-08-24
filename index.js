@@ -44,9 +44,9 @@ const walkableMatrix = [
 mapArray.forEach((row, y) => {
   row.forEach((column, x) => {
     if (typeof column === "number") {
-      map.addFeature(mapFeatures[column], x, y);
+      map.addFeature(mapFeatures[column], { x, y });
     } else {
-      map.addFeature(column, x, y);
+      map.addFeature(column, { x, y });
     }
   });
 });
@@ -68,13 +68,13 @@ const lista = [
 /* helper func */
 const getAdjacentSpaces = (x, y) => {
   const adjacentTiles = [
-    [x - 1, y],
-    [x + 1, y],
-    [x, y - 1],
-    [x, y + 1],
+    { x: x - 1, y },
+    { x: x + 1, y },
+    { x, y: y - 1 },
+    { x, y: y + 1 },
   ];
 
-  const adjacentSpaces = adjacentTiles.filter(([cx, cy]) => {
+  const adjacentSpaces = adjacentTiles.filter(({ x: cx, y: cy }) => {
     return (
       cx >= 0 &&
       cx < mapArray[0].length &&
@@ -97,20 +97,21 @@ const addRandomWaypoints = () => {
   const validLocs = mapArray
     .flatMap((row, y) =>
       row.map((column, x) =>
-        column > 0 && getAdjacentSpaces(x, y).length > 0 ? [x, y] : null
+        column > 0 && getAdjacentSpaces(x, y).length > 0 ? { x, y } : null
       )
     )
     .filter((coord) => coord !== null);
-
   const treasures = lista.map((item) => {
     const victim = Math.floor(Math.random() * validLocs.length);
-    const coords = getRandomEmptySpace(...validLocs.splice(victim, 1)[0]);
+    const coords = getRandomEmptySpace(
+      validLocs[victim].x,
+      validLocs[victim].y
+    );
     return { coords, item };
   });
 
   treasures.forEach((treasure) => {
-    const [x, y] = treasure.coords;
-    map.addWaypoint(treasure.item, x, y);
+    map.addWaypoint(treasure.item, treasure.coords);
   });
 };
 
