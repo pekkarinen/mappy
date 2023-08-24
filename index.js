@@ -101,6 +101,7 @@ const addRandomWaypoints = () => {
       )
     )
     .filter((coord) => coord !== null);
+
   const treasures = lista.map((item) => {
     const victim = Math.floor(Math.random() * validLocs.length);
     const coords = getRandomEmptySpace(
@@ -111,7 +112,9 @@ const addRandomWaypoints = () => {
   });
 
   treasures.forEach((treasure) => {
-    map.addWaypoint(treasure.item, treasure.coords);
+    if (map.getWaypointsAt(treasure.coords).length < 3) {
+      map.addWaypoint(treasure.item, treasure.coords);
+    }
   });
 };
 
