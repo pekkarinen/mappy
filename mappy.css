@@ -7,9 +7,29 @@
   padding: 0;
   box-sizing: border-box;
 }
+
 body {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  font-family: monospace;
+  font-size: 10px;
+  background: #efefef;
+}
+
+.map {
+  box-shadow: 0.2rem 0.2rem 1rem rgba(0, 0, 0, 0.2);
+}
+
+.waypoint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button {
+  margin: 1rem;
+  padding: 0.5rem;
+  font-family: monospace;
 }
