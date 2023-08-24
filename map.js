@@ -70,21 +70,23 @@ class Map {
     }
   }
 
-  addWaypoint(x, y) {
+  addWaypoint(name, x, y) {
     try {
       this.checkBounds(x, y);
-      const waypoint = this.drawFeature(
+      const element = this.drawFeature(
         {
           border: "1px dashed green",
           backgroundColor: "rgba(120,250,160,0.3)",
           className: "waypoint",
+          text: name,
         },
         x,
         y
       );
       this._waypoints.push({
         coords: [x, y],
-        element: waypoint,
+        name,
+        element,
       });
     } catch (e) {
       console.error(e.message);
@@ -116,6 +118,7 @@ class Map {
         left: `${x * this.tileSize}px`,
         top: `${y * this.tileSize}px`,
       };
+      if (feature.text) featureObj.innerText = feature.text;
       featureObj.className = feature.className || "feature";
       Object.assign(featureObj.style, featureStyle);
       this.DOMObject.append(featureObj);

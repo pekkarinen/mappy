@@ -104,12 +104,13 @@ const addRandomWaypoints = () => {
 
   const treasures = lista.map((item) => {
     const victim = Math.floor(Math.random() * validLocs.length);
-    const treasure = getRandomEmptySpace(...validLocs.splice(victim, 1)[0]);
-    return treasure;
+    const coords = getRandomEmptySpace(...validLocs.splice(victim, 1)[0]);
+    return { coords, item };
   });
 
-  treasures.forEach((waypoint) => {
-    map.addWaypoint(waypoint[0], waypoint[1]);
+  treasures.forEach((treasure) => {
+    const [x, y] = treasure.coords;
+    map.addWaypoint(treasure.item, x, y);
   });
 };
 
