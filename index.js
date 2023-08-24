@@ -112,3 +112,12 @@ const addRandomWaypoints = () => {
     map.addWaypoint(waypoint[0], waypoint[1]);
   });
 };
+
+(function addWaypointsUI() {
+  const button = document.createElement("button");
+  button.innerText = "add waypoints";
+  button.addEventListener("click", () => {
+    addRandomWaypoints();
+  });
+  app.append(button);
+})();
