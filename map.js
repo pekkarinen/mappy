@@ -9,6 +9,7 @@ class Map {
     this._tileSize = tileSize;
     this._features = [];
     this._DOMObject = {};
+    this._waypoints = [];
     this.create();
   }
 
@@ -32,6 +33,10 @@ class Map {
 
   get DOMObject() {
     return this._DOMObject;
+  }
+
+  get waypoints() {
+    return this._waypoints;
   }
 
   /* error handling */
@@ -64,11 +69,12 @@ class Map {
   addWaypoint(x, y) {
     try {
       this.checkBounds(x, y);
+      this._waypoints.push([x, y]);
       this.drawFeature(
         {
           border: "1px dashed green",
           backgroundColor: "rgba(120,250,160,0.3)",
-          className: "treasure",
+          className: "waypoint",
         },
         x,
         y
