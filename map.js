@@ -130,6 +130,7 @@ class Map {
 
   create() {
     const mapElem = document.createElement("div");
+    mapElem.className = "map";
     const mapStyle = {
       position: "relative",
       backgroundColor: "#efefef",
