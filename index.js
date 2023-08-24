@@ -125,11 +125,14 @@ const removeWaypoints = () => {
   addButton.addEventListener("click", () => {
     addRandomWaypoints();
   });
+
   app.append(addButton);
+
   const removeButton = document.createElement("button");
   removeButton.innerText = "remove waypoints";
   removeButton.addEventListener("click", () => {
     removeWaypoints();
   });
+
   app.append(removeButton);
 })();
