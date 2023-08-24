@@ -113,11 +113,23 @@ const addRandomWaypoints = () => {
   });
 };
 
+const removeWaypoints = () => {
+  while (map.waypoints.length) {
+    map.removeWaypoint(0);
+  }
+};
+
 (function addWaypointsUI() {
-  const button = document.createElement("button");
-  button.innerText = "add waypoints";
-  button.addEventListener("click", () => {
+  const addButton = document.createElement("button");
+  addButton.innerText = "add waypoints";
+  addButton.addEventListener("click", () => {
     addRandomWaypoints();
   });
-  app.append(button);
+  app.append(addButton);
+  const removeButton = document.createElement("button");
+  removeButton.innerText = "remove waypoints";
+  removeButton.addEventListener("click", () => {
+    removeWaypoints();
+  });
+  app.append(removeButton);
 })();

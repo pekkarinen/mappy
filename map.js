@@ -84,6 +84,17 @@ class Map {
     }
   }
 
+  removeWaypoint(i) {
+    try {
+      const waypoint = this._waypoints.splice(i, 1)[0];
+      waypoint.element.remove();
+      return waypoint;
+    } catch (e) {
+      console.error("no such waypoint or", e.message);
+      return false;
+    }
+  }
+
   drawFeature(feature, x, y) {
     try {
       this.checkMap();
