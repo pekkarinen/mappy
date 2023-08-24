@@ -28,6 +28,18 @@ body {
   justify-content: center;
 }
 
+.waypoint.label-order-0 {
+  align-items: flex-start;
+}
+
+.waypoint.label-order-1 {
+  align-items: center;
+}
+
+.waypoint.label-order-2 {
+  align-items: flex-end;
+}
+
 button {
   margin: 1rem;
   padding: 0.5rem;

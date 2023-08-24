@@ -93,14 +93,14 @@ class Map {
   addWaypoint(name, coords) {
     try {
       this.checkBounds(coords);
-      const existingWaypoints = this.getWaypointsAt(coords);
-      console.log("existing", existingWaypoints.length);
+      const textOrder = this.getWaypointsAt(coords).length;
       const element = this.drawFeature(
         {
           border: "1px dashed green",
           backgroundColor: "rgba(120,250,160,0.3)",
           className: "waypoint",
           text: name,
+          textOrder,
         },
         coords
       );
@@ -140,6 +140,11 @@ class Map {
       };
       if (feature.text) featureObj.innerText = feature.text;
       featureObj.className = feature.className || "feature";
+      if (feature.text) {
+        featureObj.innerText = feature.text;
+        featureObj.classList.add(`label-order-${feature.textOrder}`);
+      }
+      featureObj.classList.add(feature.className || "feature");
       Object.assign(featureObj.style, featureStyle);
       this.DOMObject.append(featureObj);
       return featureObj;
