@@ -59,8 +59,12 @@ class Map {
   addFeature(feature, x, y) {
     try {
       this.checkBounds(x, y);
-      this._features.push(feature);
-      this.drawFeature(feature, x, y);
+      const element = this.drawFeature(feature, x, y);
+      this._features.push({
+        feature,
+        coords: [x, y],
+        element,
+      });
     } catch (e) {
       console.error(e.message);
     }
