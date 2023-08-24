@@ -96,7 +96,7 @@ class Map {
       const textOrder = this.getWaypointsAt(coords).length;
       const element = this.drawFeature(
         {
-          border: "3px dashed green",
+          border: `${textOrder + 1}px dashed rgba(0,128,0,0.7)`,
           className: "waypoint",
           text: name,
           textOrder,
