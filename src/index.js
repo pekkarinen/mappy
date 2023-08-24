@@ -1,11 +1,12 @@
 /*
  * @prettier
  */
-
 import { Map } from "./map.js";
 import { Feature } from "./items.js";
+import "./mappy.css";
 
-const app = document.querySelector("#app");
+const app = document.createElement("div");
+document.body.append(app);
 
 const mapConfig = {
   height: 10,
