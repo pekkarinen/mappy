@@ -93,20 +93,22 @@ const getRandomEmptySpace = (x, y) => {
   ];
 };
 
-const validLocs = mapArray
-  .flatMap((row, y) =>
-    row.map((column, x) =>
-      column > 0 && getAdjacentSpaces(x, y).length > 0 ? [x, y] : null
+const addRandomWaypoints = () => {
+  const validLocs = mapArray
+    .flatMap((row, y) =>
+      row.map((column, x) =>
+        column > 0 && getAdjacentSpaces(x, y).length > 0 ? [x, y] : null
+      )
     )
-  )
-  .filter((coord) => coord !== null);
+    .filter((coord) => coord !== null);
 
-const treasures = lista.map((item) => {
-  const victim = Math.floor(Math.random() * validLocs.length);
-  const treasure = getRandomEmptySpace(...validLocs.splice(victim, 1)[0]);
-  return treasure;
-});
+  const treasures = lista.map((item) => {
+    const victim = Math.floor(Math.random() * validLocs.length);
+    const treasure = getRandomEmptySpace(...validLocs.splice(victim, 1)[0]);
+    return treasure;
+  });
 
-treasures.forEach((waypoint) => {
-  map.addWaypoint(waypoint[0], waypoint[1]);
-});
+  treasures.forEach((waypoint) => {
+    map.addWaypoint(waypoint[0], waypoint[1]);
+  });
+};
