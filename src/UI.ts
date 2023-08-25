@@ -161,10 +161,14 @@ class UI {
       }
     });
 
-    this.waypointList.innerText = this.map.waypoints
+    this.waypointList.innerText = this.getWaypointsAsText(this.map.waypoints);
+  };
+
+  getWaypointsAsText(waypoints: Array<Waypoint>) {
+    return waypoints
       .map((waypoint) => `${waypoint.name} [${waypoint.coords.x}, ${waypoint.coords.y}]`)
       .join(', ');
-  };
+  }
 
   removeWaypoints() {
     while (this.map.waypoints.length) {
