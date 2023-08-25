@@ -21,10 +21,31 @@ const end = new Feature('Exit', 'loppu', 'red');
 const kaytava = new Feature('Käytävä', '', '');
 const tiski = new Feature('Tiski', 'tämmönen', 'gray');
 const kaappi = new Feature('Kaappi', 'semmonen', 'blue');
-const mapFeatures = [kaytava, tiski, kaappi, start, end];
+const mapFeatures = [
+  {
+    id: 0,
+    feature: kaytava,
+  },
+  {
+    id: 1,
+    feature: tiski,
+  },
+  {
+    id: 2,
+    feature: kaappi,
+  },
+  {
+    id: 3,
+    feature: start,
+  },
+  {
+    id: 4,
+    feature: end,
+  },
+];
 
 const mapArray = [
-  [4, 0, 1, 0, 1, 0, 1, 1, 1, 0],
+  [3, 0, 1, 0, 1, 0, 1, 1, 1, 0],
   [0, 0, 1, 0, 2, 0, 1, 0, 1, 0],
   [0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
   [1, 0, 1, 1, 1, 0, 2, 1, 1, 0],
@@ -33,12 +54,15 @@ const mapArray = [
   [0, 0, 2, 0, 2, 0, 2, 1, 0, 1],
   [1, 0, 2, 0, 2, 0, 0, 0, 0, 0],
   [1, 0, 0, 0, 0, 0, 1, 0, 1, 0],
-  [1, 1, 2, 1, 1, 0, 1, 0, 1, 5],
+  [1, 1, 2, 1, 1, 0, 1, 0, 1, 4],
 ];
 
 mapArray.forEach((row, y) => {
   row.forEach((column, x) => {
-    map.addFeature(mapFeatures[column], { x, y });
+    if (column > 0) {
+      const feature = mapFeatures.find((feature) => feature.id === column).feature;
+      map.addFeature(feature, { x, y });
+    }
   });
 });
 
