@@ -1,5 +1,6 @@
 import { Map } from './map';
 import { Feature } from './items';
+import { Pathfinder } from './pathfinder';
 import './mappy.css';
 
 const app = document.createElement('div');
@@ -67,6 +68,8 @@ mapArray.forEach((row, y) => {
 
 map.addFeature(start, { x: 0, y: 0 });
 map.addFeature(end, { x: 9, y: 9 });
+
+const pathfinder = new Pathfinder(mapArray);
 
 /* data mockup */
 
