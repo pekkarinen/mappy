@@ -136,6 +136,8 @@ const getRandomItems = (items: Array<string>, count: number) => {
   return randomItems;
 };
 
+let startPos = { x: 0, y: 0 };
+
 const addRandomWaypoints = (count = 5) => {
   const validLocs = mapArray
     .flatMap((row, y) =>
@@ -153,7 +155,17 @@ const addRandomWaypoints = (count = 5) => {
 
   treasures.forEach((treasure) => {
     if (map.getWaypointsAt(treasure.coords).length < 3) {
-      map.addWaypoint(treasure.item, treasure.coords);
+      const waypoint = map.addWaypoint(treasure.item, treasure.coords);
+      waypoint.element.addEventListener('click', (e) => {
+        e.preventDefault();
+        const path = pathfinder.findPathTo(startPos, waypoint.coords);
+        path.map(([x, y]) => {
+          const coords = { x, y };
+          map.addWaypoint(null, coords);
+        });
+        const [x, y] = path.at(-1);
+        startPos = { x, y };
+      });
     }
   });
 };
