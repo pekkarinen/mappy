@@ -178,6 +178,13 @@ class UI {
     this.waypointCounter.innerText = String(this.map.waypoints.length);
   }
 
+  addUIButton(text: string, func: Function) {
+    const button = document.createElement('button');
+    button.innerText = text;
+    button.addEventListener('click', (e) => func());
+    return button;
+  }
+
   addWaypointsUI() {
     const waypointUI = document.createElement('section');
     waypointUI.className = 'waypoint-ui';
@@ -191,18 +198,13 @@ class UI {
 
     waypointUI.append(waypointCount);
 
-    const addButton = document.createElement('button');
-    addButton.innerText = 'add waypoints';
-    addButton.addEventListener('click', () => {
+    const addButton = this.addUIButton('add waypoints', () => {
       this.addRandomWaypoints(waypointCount.valueAsNumber);
       this.updateWaypointCount();
     });
 
     waypointUI.append(addButton);
 
-    const resetButton = document.createElement('button');
-    resetButton.innerText = 'reset';
-    resetButton.addEventListener('click', () => {
       this.removeWaypoints();
     });
 
