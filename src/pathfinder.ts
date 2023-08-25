@@ -14,6 +14,26 @@ function orderWaypointsByDistance(waypoints: Array<Waypoint>, referencePoint: Co
   });
 }
 
+function generatePermutations<T>(arr: T[]): T[][] {
+  const result: T[][] = [];
+
+  function backtrack(start: number): void {
+    if (start === arr.length - 1) {
+      result.push([...arr]);
+      return;
+    }
+
+    for (let i = start; i < arr.length; i++) {
+      [arr[start], arr[i]] = [arr[i], arr[start]];
+      backtrack(start + 1);
+      [arr[start], arr[i]] = [arr[i], arr[start]]; // Backtrack
+    }
+  }
+
+  backtrack(0);
+  return result;
+}
+
 class Pathfinder {
   private _walkableMatrix: MapArray;
   private aStarInstance: AStarFinder;
@@ -36,6 +56,30 @@ class Pathfinder {
 
   orderWaypointsEuclid(waypoints: Array<Waypoint>, coords: Coords) {
     return orderWaypointsByDistance(waypoints, coords);
+  }
+
+  orderWaypointsBrute(waypoints: Array<Waypoint>, coords: Coords) {
+    let shortestRoute: Waypoint[];
+    let shortestRouteLength = Infinity;
+
+    const permutations = generatePermutations(waypoints);
+    for (const permutation of permutations) {
+      let currentPos = permutation[0].coords;
+      let routeLength = 0;
+      for (let i = 1; i < permutation.length; i++) {
+        const path = this.findPathTo(currentPos, permutation[i].coords);
+        routeLength += path.length;
+        const [x, y] = path.at(-1);
+        currentPos = { x, y };
+      }
+
+      console.log('routeLength', routeLength);
+      if (routeLength < shortestRouteLength) {
+        shortestRoute = permutation;
+        shortestRouteLength = routeLength;
+      }
+    }
+    return shortestRoute;
   }
 
   findPathTo(startPos: Coords, endPos: Coords) {

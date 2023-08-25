@@ -257,6 +257,21 @@ class UI {
 
     waypointUI.append(routeButton);
 
+    const shortestButton = this.addUIButton('shortest', async () => {
+      const waypoints = this.map.waypoints;
+      // waypoints.push({ name: 'goal', coords: this.goalPos });
+      const shortestRoute = this.pathfinder.orderWaypointsBrute(waypoints, this.startPos);
+      shortestRoute.push({ name: 'goal', coords: this.goalPos });
+      this.waypointList.innerText = `Shortest route: ${this.getWaypointsAsText(shortestRoute)}`;
+
+      for (const waypoint of shortestRoute) {
+        const delay = await this.getPathToWaypoint(waypoint);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    });
+
+    waypointUI.append(shortestButton);
+
     const resetButton = this.addUIButton('reset', () => {
       this.removeWaypoints();
     });
