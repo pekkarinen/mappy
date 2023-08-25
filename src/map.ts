@@ -1,10 +1,17 @@
 class Map {
-  constructor({ height, width, tileSize }) {
+  _height: number;
+  _width: number;
+  _tileSize: number;
+  _features: Array<MapFeature>;
+  _DOMObject: HTMLElement;
+  _waypoints: Array<Waypoint>;
+
+  constructor({ height, width, tileSize }: MapConfig) {
     this._height = height;
     this._width = width;
     this._tileSize = tileSize;
+    this._DOMObject;
     this._features = [];
-    this._DOMObject = {};
     this._waypoints = [];
     this.create();
   }
@@ -36,7 +43,7 @@ class Map {
   }
 
   /* error handling */
-  checkBounds(coords) {
+  checkBounds(coords: Coords) {
     if (coords.x > this.width || coords.y > this.height || coords.x < 0 || coords.y < 0) {
       throw new Error('out of bounds!');
     }
@@ -52,7 +59,7 @@ class Map {
     }
   }
 
-  addFeature(feature, coords) {
+  addFeature(feature: Feature, coords: Coords) {
     try {
       this.checkBounds(coords);
       const element = this.drawFeature(feature, coords);
@@ -66,7 +73,7 @@ class Map {
     }
   }
 
-  getWaypointsAt(coords) {
+  getWaypointsAt(coords: Coords) {
     if (coords.x === undefined || coords.y === undefined || coords.x < 0 || coords.y < 0) {
       console.error('missing or invalid coords!');
       return;
@@ -76,7 +83,7 @@ class Map {
     });
   }
 
-  addWaypoint(name, coords) {
+  addWaypoint(name: string, coords: Coords) {
     try {
       this.checkBounds(coords);
       const textOrder = this.getWaypointsAt(coords).length;
@@ -90,8 +97,8 @@ class Map {
         coords
       );
       this._waypoints.push({
-        coords,
         name,
+        coords,
         element,
       });
     } catch (e) {
@@ -99,9 +106,9 @@ class Map {
     }
   }
 
-  removeWaypoint(i) {
+  removeWaypoint(index: number) {
     try {
-      const waypoint = this._waypoints.splice(i, 1)[0];
+      const waypoint = this._waypoints.splice(index, 1)[0];
       waypoint.element.remove();
       return waypoint;
     } catch (e) {
@@ -110,7 +117,7 @@ class Map {
     }
   }
 
-  drawFeature(feature, coords) {
+  drawFeature(feature: Feature, coords: Coords) {
     try {
       const featureObj = document.createElement('div');
       const featureStyle = {

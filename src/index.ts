@@ -1,5 +1,5 @@
-import { Map } from './map.js';
-import { Feature } from './items.js';
+import { Map } from './map';
+import { Feature } from './items';
 import { AStarFinder } from 'astar-typescript';
 import './mappy.css';
 
@@ -16,15 +16,15 @@ const map = new Map(mapConfig);
 
 app.append(map.DOMObject);
 
+const start = new Feature('Start', 'lähtö', 'green');
+const end = new Feature('Exit', 'loppu', 'red');
+const kaytava = new Feature('Käytävä', '', '');
 const tiski = new Feature('Tiski', 'tämmönen', 'gray');
 const kaappi = new Feature('Kaappi', 'semmonen', 'blue');
-const mapFeatures = [0, tiski, kaappi];
-
-const s = new Feature('Start', 'lähtö', 'green');
-const e = new Feature('Exit', 'loppu', 'red');
+const mapFeatures = [kaytava, tiski, kaappi, start, end];
 
 const mapArray = [
-  [s, 0, 1, 0, 1, 0, 1, 1, 1, 0],
+  [4, 0, 1, 0, 1, 0, 1, 1, 1, 0],
   [0, 0, 1, 0, 2, 0, 1, 0, 1, 0],
   [0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
   [1, 0, 1, 1, 1, 0, 2, 1, 1, 0],
@@ -33,15 +33,22 @@ const mapArray = [
   [0, 0, 2, 0, 2, 0, 2, 1, 0, 1],
   [1, 0, 2, 0, 2, 0, 0, 0, 0, 0],
   [1, 0, 0, 0, 0, 0, 1, 0, 1, 0],
-  [1, 1, 2, 1, 1, 0, 1, 0, 1, e],
+  [1, 1, 2, 1, 1, 0, 1, 0, 1, 5],
 ];
+
+mapArray.forEach((row, y) => {
+  row.forEach((column, x) => {
+    map.addFeature(mapFeatures[column], { x, y });
+  });
+});
+
+const startPos = { x: 0, y: 0 };
+const endPos = { x: 9, y: 9 };
 
 /* pathfinding mocks */
 const matrix = mapArray.map((row) =>
   row.map((column) => (column === 0 || typeof column === 'object' ? 0 : 1))
 );
-
-console.log(matrix);
 
 const pathFinder = new AStarFinder({
   grid: {
@@ -51,25 +58,36 @@ const pathFinder = new AStarFinder({
   },
 });
 
-const startPos = { x: 0, y: 0 };
-const goalPos = { x: 9, y: 9 };
-
-const pathResult = pathFinder.findPath(startPos, goalPos);
-console.log('path', pathResult);
+const pathResult = pathFinder.findPath(startPos, endPos);
 
 /* end pathfinding */
-
-mapArray.forEach((row, y) => {
-  row.forEach((column, x) => {
-    if (typeof column === 'number' && column > 0) {
-      map.addFeature(mapFeatures[column], { x, y });
-    } else if (typeof column === 'object') {
-      map.addFeature(column, { x, y });
-    }
-  });
-});
-
 /* data mockup */
+
+/* helper func */
+const getAdjacentSpaces = ({ x, y }: Coords) => {
+  const adjacentTiles = [
+    { x: x - 1, y },
+    { x: x + 1, y },
+    { x, y: y - 1 },
+    { x, y: y + 1 },
+  ];
+
+  const adjacentSpaces = adjacentTiles.filter(({ x: cx, y: cy }) => {
+    return (
+      cx >= 0 &&
+      cx < mapArray[0].length &&
+      cy >= 0 &&
+      cy < mapArray.length &&
+      mapArray[cy][cx] === 0
+    );
+  });
+  return adjacentSpaces;
+};
+
+const getRandomEmptySpace = ({ x, y }: Coords) => {
+  const emptyAdjacentSpaces = getAdjacentSpaces({ x, y });
+  return emptyAdjacentSpaces[Math.floor(Math.random() * emptyAdjacentSpaces.length)];
+};
 
 const lista = [
   'jauho',
@@ -94,56 +112,32 @@ const lista = [
   'olutta',
 ];
 
-/* helper func */
-const getAdjacentSpaces = (x, y) => {
-  const adjacentTiles = [
-    { x: x - 1, y },
-    { x: x + 1, y },
-    { x, y: y - 1 },
-    { x, y: y + 1 },
-  ];
-
-  const adjacentSpaces = adjacentTiles.filter(({ x: cx, y: cy }) => {
-    return (
-      cx >= 0 &&
-      cx < mapArray[0].length &&
-      cy >= 0 &&
-      cy < mapArray.length &&
-      mapArray[cy][cx] === 0
-    );
-  });
-  return adjacentSpaces;
-};
-
-const getRandomEmptySpace = (x, y) => {
-  const emptyAdjacentSpaces = getAdjacentSpaces(x, y);
-  return emptyAdjacentSpaces[Math.floor(Math.random() * emptyAdjacentSpaces.length)];
-};
-
-const getRandomItems = (array, count) => {
-  const items = [];
+const getRandomItems = (items: Array<string>, count: number) => {
+  const randomItems = [];
   const usedIndices = [];
-  while (items.length < count) {
-    const index = Math.floor(Math.random() * array.length);
-    const randomItem = array[index];
+  while (randomItems.length < count) {
+    const index = Math.floor(Math.random() * items.length);
+    const randomItem = items[index];
     if (usedIndices.indexOf(index) === -1) {
       usedIndices.push(index);
-      items.push(randomItem);
+      randomItems.push(randomItem);
     }
   }
-  return items;
+  return randomItems;
 };
 
 const addRandomWaypoints = (count = 5) => {
   const validLocs = mapArray
     .flatMap((row, y) =>
-      row.map((column, x) => (column > 0 && getAdjacentSpaces(x, y).length > 0 ? { x, y } : null))
+      row.map((column, x) =>
+        column > 0 && getAdjacentSpaces({ x, y }).length > 0 ? { x, y } : null
+      )
     )
     .filter((coord) => coord !== null);
 
   const treasures = getRandomItems(lista, count).map((item) => {
     const victim = Math.floor(Math.random() * validLocs.length);
-    const coords = getRandomEmptySpace(validLocs[victim].x, validLocs[victim].y);
+    const coords = getRandomEmptySpace({ x: validLocs[victim].x, y: validLocs[victim].y });
     return { coords, item };
   });
 
@@ -173,11 +167,15 @@ const removeWaypoints = () => {
 
   waypointUI.append(waypointCount);
 
+  const updateWaypointCount = () => {
+    waypointCounter.innerText = String(map.waypoints.length);
+  };
+
   const addButton = document.createElement('button');
   addButton.innerText = 'add waypoints';
   addButton.addEventListener('click', () => {
     addRandomWaypoints(waypointCount.valueAsNumber);
-    waypointCounter.innerText = map.waypoints.length;
+    updateWaypointCount();
   });
 
   waypointUI.append(addButton);
@@ -186,7 +184,7 @@ const removeWaypoints = () => {
   removeButton.innerText = 'remove waypoints';
   removeButton.addEventListener('click', () => {
     removeWaypoints();
-    waypointCounter.innerText = map.waypoints.length;
+    updateWaypointCount();
   });
 
   waypointUI.append(removeButton);
