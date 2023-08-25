@@ -29,6 +29,7 @@ const lista = [
 class UI {
   private _currentPos: Coords;
   private _startPos: Coords;
+  private _goalPos: Coords;
   private _pathfinder: Pathfinder;
   private _app: HTMLElement;
   private _mapArray: MapArray;
@@ -45,6 +46,7 @@ class UI {
   ) {
     this._pathfinder = new Pathfinder(mapArray);
     this._startPos = startPos;
+    this._goalPos = goalPos;
     this._currentPos = startPos;
     this._app = app;
     this._mapArray = mapArray;
@@ -76,6 +78,10 @@ class UI {
 
   get startPos() {
     return this._startPos;
+  }
+
+  get goalPos() {
+    return this._goalPos;
   }
 
   get waypointCounter() {
@@ -149,20 +155,31 @@ class UI {
         const waypoint = this.map.addWaypoint(treasure.item, treasure.coords);
         waypoint.element.addEventListener('click', (e) => {
           e.preventDefault();
-          const path = this.pathfinder.findPathTo(this.currentPos, waypoint.coords);
-          const delay = 100;
-          path.map(([x, y], i) => {
-            const coords = { x, y };
-            var t = setTimeout(() => this.map.addWaypoint(null, coords), delay * i);
-          });
-          const [x, y] = path.at(-1);
-          this.currentPos = { x, y };
+          this.getPathToWaypoint(waypoint);
         });
       }
     });
 
     this.waypointList.innerText = this.getWaypointsAsText(this.map.waypoints);
   };
+
+  async getPathToWaypoint(waypoint: Waypoint) {
+    const path = this.pathfinder.findPathTo(this.currentPos, waypoint.coords);
+    const delay = 100;
+    let accDelay = 0;
+    return new Promise<number>((resolve) => {
+      for (const node of path) {
+        const [x, y] = node;
+        const coords = { x, y };
+        setTimeout(() => this.map.addWaypoint(null, coords), accDelay);
+        accDelay += delay;
+      }
+      const [x, y] = path.at(-1);
+      this.currentPos = { x, y };
+      console.log(`${path.length}, ${accDelay}ms`);
+      resolve(accDelay);
+    });
+  }
 
   getWaypointsAsText(waypoints: Array<Waypoint>) {
     return waypoints
@@ -189,6 +206,15 @@ class UI {
     return button;
   }
 
+  get orderedWaypoints() {
+    const orderedWaypoints = this.pathfinder.orderWaypointsEuclid(
+      this.map.waypoints,
+      this.currentPos
+    );
+    this.waypointList.innerText = `Sorted: ${this.getWaypointsAsText(orderedWaypoints)}`;
+    return orderedWaypoints;
+  }
+
   addWaypointsUI() {
     const waypointUI = document.createElement('section');
     waypointUI.className = 'waypoint-ui';
@@ -210,14 +236,25 @@ class UI {
     waypointUI.append(addButton);
 
     const orderButton = this.addUIButton('order', () => {
-      const orderedWaypoints = this.pathfinder.orderWaypointsEuclid(
-        this.map.waypoints,
-        this.currentPos
-      );
-      this.waypointList.innerText = this.getWaypointsAsText(orderedWaypoints);
+      this.orderedWaypoints;
     });
 
     waypointUI.append(orderButton);
+
+    // const routeIndicator = document.createElement('div');
+    // routeIndicator.innerText = 'foo';
+    // waypointUI.append(routeIndicator);
+
+    const routeButton = this.addUIButton('route', async () => {
+      const waypoints = this.orderedWaypoints;
+      waypoints.push({ name: 'goal', coords: this.goalPos });
+      for (const waypoint of waypoints) {
+        const delay = await this.getPathToWaypoint(waypoint);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    });
+
+    waypointUI.append(routeButton);
 
     const resetButton = this.addUIButton('reset', () => {
       this.removeWaypoints();
