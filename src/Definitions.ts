@@ -9,6 +9,8 @@ type Coords = {
   y: number;
 };
 
+type MapArray = Array<Array<number>>;
+
 type Feature = {
   name?: string;
   description?: string;
