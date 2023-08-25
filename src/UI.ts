@@ -193,6 +193,7 @@ class UI {
     }
     this.currentPos = this.startPos;
     this.updateWaypointCount();
+    this.waypointList.innerText = '';
   }
 
   updateWaypointCount() {
