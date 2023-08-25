@@ -14,6 +14,10 @@ body {
   background: #efefef;
 }
 
+.app {
+  max-width: 640px;
+}
+
 .map {
   box-shadow: 0.2rem 0.2rem 1rem rgba(0, 0, 0, 0.2);
 }
@@ -64,4 +68,9 @@ input[type='number'] {
 
 .waypoint-counter::before {
   content: 'waypoints:';
+}
+
+.waypoint-list {
+  border: 1px solid #ddd;
+  padding: 1rem;
 }

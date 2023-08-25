@@ -34,6 +34,7 @@ class UI {
   private _mapArray: MapArray;
   private _map: GridMap;
   private _waypointCounter: HTMLElement;
+  private _waypointList: HTMLElement;
 
   constructor(
     app: HTMLElement,
@@ -49,6 +50,7 @@ class UI {
     this._mapArray = mapArray;
     this._map = mapInstance;
     this._waypointCounter;
+    this._waypointList;
     this.addWaypointsUI();
   }
 
@@ -78,6 +80,10 @@ class UI {
 
   get waypointCounter() {
     return this._waypointCounter;
+  }
+
+  get waypointList() {
+    return this._waypointList;
   }
 
   set currentPos({ x, y }) {
@@ -144,15 +150,20 @@ class UI {
         waypoint.element.addEventListener('click', (e) => {
           e.preventDefault();
           const path = this.pathfinder.findPathTo(this.currentPos, waypoint.coords);
-          path.map(([x, y]) => {
+          const delay = 100;
+          path.map(([x, y], i) => {
             const coords = { x, y };
-            this.map.addWaypoint(null, coords);
+            var t = setTimeout(() => this.map.addWaypoint(null, coords), delay * i);
           });
           const [x, y] = path.at(-1);
           this.currentPos = { x, y };
         });
       }
     });
+
+    this.waypointList.innerText = this.map.waypoints
+      .map((waypoint) => `${waypoint.name} [${waypoint.coords.x}, ${waypoint.coords.y}]`)
+      .join(', ');
   };
 
   removeWaypoints() {
@@ -202,7 +213,11 @@ class UI {
 
     waypointUI.append(this.waypointCounter);
 
+    this._waypointList = document.createElement('div');
+    this._waypointList.classList.add('waypoint-list');
+
     this.app.append(waypointUI);
+    this.app.append(this._waypointList);
   }
 }
 
