@@ -72,4 +72,4 @@ const goalPos = { x: 0, y: 0 };
 map.addFeature(start, startPos);
 map.addFeature(end, goalPos);
 
-const userInterface = new UI(app, mapArray, startPos, goalPos, map);
+new UI(app, mapArray, startPos, goalPos, map);
