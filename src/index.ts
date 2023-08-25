@@ -4,6 +4,7 @@ import { UI } from './UI';
 import './mappy.css';
 
 const app = document.createElement('div');
+app.classList.add('app');
 document.body.append(app);
 
 const mapConfig = {
