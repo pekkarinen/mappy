@@ -1,18 +1,28 @@
 import { AStarFinder } from 'astar-typescript';
 
-const pathFinder = new AStarFinder({
-  grid: {
-    width: 10,
-    height: 10,
-    matrix,
-  },
-});
+class Pathfinder {
+  private _walkableMatrix: MapArray;
+  private aStarInstance: AStarFinder;
 
-/* pathfinding mocks */
-const matrix = mapArray.map((row) =>
-  row.map((column) => (column === 0 || typeof column === 'object' ? 0 : 1))
-);
+  constructor(map: MapArray) {
+    this._walkableMatrix = map.map((row) =>
+      row.map((column) => (column === 0 || typeof column === 'object' ? 0 : 1))
+    );
+    this.aStarInstance = new AStarFinder({
+      grid: {
+        matrix: this._walkableMatrix,
+      },
+      diagonalAllowed: false,
+    });
+  }
 
+  get matrix() {
+    return this._walkableMatrix;
+  }
 
-const pathResult = pathFinder.findPath(startPos, endPos);
+  findPathTo(startPos: Coords, endPos: Coords) {
+    return this.aStarInstance.findPath(startPos, endPos);
+  }
+}
 
+export { Pathfinder };
