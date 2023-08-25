@@ -14,7 +14,7 @@ type MapArray = Array<Array<number>>;
 type Feature = {
   name?: string;
   description?: string;
-  backgroundColor?: string;
+  background?: string;
   border?: string;
   className?: string;
   text?: string;
