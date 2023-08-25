@@ -174,6 +174,7 @@ const removeWaypoints = () => {
   while (map.waypoints.length) {
     map.removeWaypoint(0);
   }
+  startPos = { x: 0, y: 0 };
 };
 
 (function addWaypointsUI() {
