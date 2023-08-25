@@ -2,7 +2,6 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  mode: 'development',
   entry: './src/index.ts',
   module: {
     rules: [
@@ -19,14 +18,6 @@ module.exports = {
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
-  },
-  devtool: 'inline-source-map',
-  performance: {
-    hints: false,
-  },
-  devServer: {
-    static: './dist',
-    hot: true,
   },
   plugins: [
     new HtmlWebpackPlugin({
