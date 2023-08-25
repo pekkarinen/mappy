@@ -1,12 +1,15 @@
 class Thing {
-  constructor(name, description) {
+  name:string
+  description:string
+  constructor(name:string, description:string) {
     this.name = name;
     this.description = description;
   }
 }
 
 class Feature extends Thing {
-  constructor(name, description, backgroundColor) {
+  backgroundColor:string
+  constructor(name:string, description:string, backgroundColor:string) {
     super(name, description);
     this.backgroundColor = backgroundColor;
   }
