@@ -123,13 +123,14 @@ class Map {
       const featureStyle = {
         boxSizing: 'border-box',
         position: 'absolute',
-        backgroundColor: feature.backgroundColor,
+        background: feature.background,
         border: feature.border ? feature.border : '1px solid darkgray',
         width: `${this.tileSize}px`,
         height: `${this.tileSize}px`,
         left: `${coords.x * this.tileSize}px`,
         top: `${coords.y * this.tileSize}px`,
       };
+
       if (feature.text) {
         featureObj.innerText = feature.text;
         featureObj.classList.add(`label-order-${feature.textOrder}`);
@@ -148,7 +149,7 @@ class Map {
     mapElem.className = 'map';
     const mapStyle = {
       position: 'relative',
-      backgroundColor: '#e6e6e6',
+      background: '#e6e6e6',
       border: '1px solid black',
       width: `${this.width * this.tileSize}px`,
       height: `${this.height * this.tileSize}px`,
