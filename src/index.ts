@@ -1,6 +1,6 @@
 import { Map } from './map';
 import { Feature } from './items';
-import { Pathfinder } from './pathfinder';
+import { UI } from './UI';
 import './mappy.css';
 
 const app = document.createElement('div');
@@ -66,156 +66,10 @@ mapArray.forEach((row, y) => {
   });
 });
 
-map.addFeature(start, { x: 0, y: 0 });
-map.addFeature(end, { x: 9, y: 9 });
+const startPos = { x: 0, y: 0 };
+const goalPos = { x: 0, y: 0 };
 
-const pathfinder = new Pathfinder(mapArray);
+map.addFeature(start, startPos);
+map.addFeature(end, goalPos);
 
-/* data mockup */
-
-/* helper func */
-const getAdjacentSpaces = ({ x, y }: Coords) => {
-  const adjacentTiles = [
-    { x: x - 1, y },
-    { x: x + 1, y },
-    { x, y: y - 1 },
-    { x, y: y + 1 },
-  ];
-
-  const adjacentSpaces = adjacentTiles.filter(({ x: cx, y: cy }) => {
-    return (
-      cx >= 0 &&
-      cx < mapArray[0].length &&
-      cy >= 0 &&
-      cy < mapArray.length &&
-      mapArray[cy][cx] === 0
-    );
-  });
-  return adjacentSpaces;
-};
-
-const getRandomEmptySpace = ({ x, y }: Coords) => {
-  const emptyAdjacentSpaces = getAdjacentSpaces({ x, y });
-  return emptyAdjacentSpaces[Math.floor(Math.random() * emptyAdjacentSpaces.length)];
-};
-
-const lista = [
-  'jauho',
-  'perunoi',
-  'sokeri',
-  'omeno',
-  'sukat',
-  'maito',
-  'piimä',
-  'juustu',
-  'pipot',
-  'ohra',
-  'vehnä',
-  'herne',
-  'sinep',
-  'ketsup',
-  'salaat',
-  'pasta',
-  'vihvit',
-  'nakki',
-  'makkur',
-  'olutta',
-];
-
-const getRandomItems = (items: Array<string>, count: number) => {
-  const randomItems = [];
-  const usedIndices = [];
-  while (randomItems.length < count) {
-    const index = Math.floor(Math.random() * items.length);
-    const randomItem = items[index];
-    if (usedIndices.indexOf(index) === -1) {
-      usedIndices.push(index);
-      randomItems.push(randomItem);
-    }
-  }
-  return randomItems;
-};
-
-let startPos = { x: 0, y: 0 };
-
-const addRandomWaypoints = (count = 5) => {
-  const validLocs = mapArray
-    .flatMap((row, y) =>
-      row.map((column, x) =>
-        column > 0 && getAdjacentSpaces({ x, y }).length > 0 ? { x, y } : null
-      )
-    )
-    .filter((coord) => coord !== null);
-
-  const treasures = getRandomItems(lista, count).map((item) => {
-    const victim = Math.floor(Math.random() * validLocs.length);
-    const coords = getRandomEmptySpace({ x: validLocs[victim].x, y: validLocs[victim].y });
-    return { coords, item };
-  });
-
-  treasures.forEach((treasure) => {
-    if (map.getWaypointsAt(treasure.coords).length < 3) {
-      const waypoint = map.addWaypoint(treasure.item, treasure.coords);
-      waypoint.element.addEventListener('click', (e) => {
-        e.preventDefault();
-        const path = pathfinder.findPathTo(startPos, waypoint.coords);
-        path.map(([x, y]) => {
-          const coords = { x, y };
-          map.addWaypoint(null, coords);
-        });
-        const [x, y] = path.at(-1);
-        startPos = { x, y };
-      });
-    }
-  });
-};
-
-const removeWaypoints = () => {
-  while (map.waypoints.length) {
-    map.removeWaypoint(0);
-  }
-  startPos = { x: 0, y: 0 };
-};
-
-(function addWaypointsUI() {
-  const waypointUI = document.createElement('section');
-  waypointUI.className = 'waypoint-ui';
-
-  const waypointCount = document.createElement('input') as HTMLInputElement;
-  waypointCount.type = 'number';
-  waypointCount.valueAsNumber = 5;
-  waypointCount.addEventListener('change', () => {
-    if (waypointCount.valueAsNumber > lista.length) waypointCount.valueAsNumber = lista.length;
-  });
-
-  waypointUI.append(waypointCount);
-
-  const updateWaypointCount = () => {
-    waypointCounter.innerText = String(map.waypoints.length);
-  };
-
-  const addButton = document.createElement('button');
-  addButton.innerText = 'add waypoints';
-  addButton.addEventListener('click', () => {
-    addRandomWaypoints(waypointCount.valueAsNumber);
-    updateWaypointCount();
-  });
-
-  waypointUI.append(addButton);
-
-  const removeButton = document.createElement('button');
-  removeButton.innerText = 'remove waypoints';
-  removeButton.addEventListener('click', () => {
-    removeWaypoints();
-    updateWaypointCount();
-  });
-
-  waypointUI.append(removeButton);
-
-  const waypointCounter = document.createElement('div');
-  waypointCounter.classList.add('waypoint-counter');
-
-  waypointUI.append(waypointCounter);
-
-  app.append(waypointUI);
-})();
+const userInterface = new UI(app, mapArray, startPos, goalPos, map);
