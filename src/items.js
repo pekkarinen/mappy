@@ -1,7 +1,3 @@
-/*
- * @prettier
- */
-
 class Thing {
   constructor(name, description) {
     this.name = name;

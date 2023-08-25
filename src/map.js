@@ -1,7 +1,3 @@
-/*
- * @prettier
- */
-
 class Map {
   constructor({ height, width, tileSize }) {
     this._height = height;
@@ -41,23 +37,18 @@ class Map {
 
   /* error handling */
   checkBounds(coords) {
-    if (
-      coords.x > this.width ||
-      coords.y > this.height ||
-      coords.x < 0 ||
-      coords.y < 0
-    ) {
-      throw new Error("out of bounds!");
+    if (coords.x > this.width || coords.y > this.height || coords.x < 0 || coords.y < 0) {
+      throw new Error('out of bounds!');
     }
 
     if (coords.x === undefined || coords.y === undefined) {
-      throw new Error("missing coords!");
+      throw new Error('missing coords!');
     }
   }
 
   checkMap() {
     if (!(this.DOMObject instanceof HTMLElement)) {
-      throw new Error("No map!");
+      throw new Error('No map!');
     }
   }
 
@@ -76,13 +67,8 @@ class Map {
   }
 
   getWaypointsAt(coords) {
-    if (
-      coords.x === undefined ||
-      coords.y === undefined ||
-      coords.x < 0 ||
-      coords.y < 0
-    ) {
-      console.error("missing or invalid coords!");
+    if (coords.x === undefined || coords.y === undefined || coords.x < 0 || coords.y < 0) {
+      console.error('missing or invalid coords!');
       return;
     }
     return this._waypoints.filter((waypoint) => {
@@ -97,7 +83,7 @@ class Map {
       const element = this.drawFeature(
         {
           border: `${textOrder + 1}px inset rgba(0,200,0,0.7)`,
-          className: "waypoint",
+          className: 'waypoint',
           text: name,
           textOrder,
         },
@@ -119,19 +105,19 @@ class Map {
       waypoint.element.remove();
       return waypoint;
     } catch (e) {
-      console.error("no such waypoint or", e.message);
+      console.error('no such waypoint or', e.message);
       return false;
     }
   }
 
   drawFeature(feature, coords) {
     try {
-      const featureObj = document.createElement("div");
+      const featureObj = document.createElement('div');
       const featureStyle = {
-        boxSizing: "border-box",
-        position: "absolute",
+        boxSizing: 'border-box',
+        position: 'absolute',
         backgroundColor: feature.backgroundColor,
-        border: feature.border ? feature.border : "1px solid darkgray",
+        border: feature.border ? feature.border : '1px solid darkgray',
         width: `${this.tileSize}px`,
         height: `${this.tileSize}px`,
         left: `${coords.x * this.tileSize}px`,
@@ -141,7 +127,7 @@ class Map {
         featureObj.innerText = feature.text;
         featureObj.classList.add(`label-order-${feature.textOrder}`);
       }
-      featureObj.classList.add(feature.className || "feature");
+      featureObj.classList.add(feature.className || 'feature');
       Object.assign(featureObj.style, featureStyle);
       this.DOMObject.append(featureObj);
       return featureObj;
@@ -151,12 +137,12 @@ class Map {
   }
 
   create() {
-    const mapElem = document.createElement("div");
-    mapElem.className = "map";
+    const mapElem = document.createElement('div');
+    mapElem.className = 'map';
     const mapStyle = {
-      position: "relative",
-      backgroundColor: "#e6e6e6",
-      border: "1px solid black",
+      position: 'relative',
+      backgroundColor: '#e6e6e6',
+      border: '1px solid black',
       width: `${this.width * this.tileSize}px`,
       height: `${this.height * this.tileSize}px`,
     };
