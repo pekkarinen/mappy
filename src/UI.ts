@@ -209,6 +209,17 @@ class UI {
 
     waypointUI.append(addButton);
 
+    const orderButton = this.addUIButton('order', () => {
+      const orderedWaypoints = this.pathfinder.orderWaypointsEuclid(
+        this.map.waypoints,
+        this.currentPos
+      );
+      this.waypointList.innerText = this.getWaypointsAsText(orderedWaypoints);
+    });
+
+    waypointUI.append(orderButton);
+
+    const resetButton = this.addUIButton('reset', () => {
       this.removeWaypoints();
     });
 
