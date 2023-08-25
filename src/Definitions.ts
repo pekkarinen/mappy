@@ -24,7 +24,7 @@ type Feature = {
 type Waypoint = {
   name: string;
   coords: Coords;
-  element: HTMLElement;
+  element?: HTMLElement;
 };
 
 type MapFeature = {
