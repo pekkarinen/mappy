@@ -1,6 +1,5 @@
 import { Map } from './map';
 import { Feature } from './items';
-import { AStarFinder } from 'astar-typescript';
 import './mappy.css';
 
 const app = document.createElement('div');
@@ -69,22 +68,6 @@ mapArray.forEach((row, y) => {
 const startPos = { x: 0, y: 0 };
 const endPos = { x: 9, y: 9 };
 
-/* pathfinding mocks */
-const matrix = mapArray.map((row) =>
-  row.map((column) => (column === 0 || typeof column === 'object' ? 0 : 1))
-);
-
-const pathFinder = new AStarFinder({
-  grid: {
-    width: 10,
-    height: 10,
-    matrix,
-  },
-});
-
-const pathResult = pathFinder.findPath(startPos, endPos);
-
-/* end pathfinding */
 /* data mockup */
 
 /* helper func */
