@@ -68,7 +68,7 @@ mapArray.forEach((row, y) => {
 });
 
 const startPos = { x: 0, y: 0 };
-const goalPos = { x: 0, y: 0 };
+const goalPos = { x: 9, y: 9 };
 
 map.addFeature(start, startPos);
 map.addFeature(end, goalPos);
