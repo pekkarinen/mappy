@@ -189,13 +189,13 @@ class UI {
 
     waypointUI.append(addButton);
 
-    const removeButton = document.createElement('button');
-    removeButton.innerText = 'remove waypoints';
-    removeButton.addEventListener('click', () => {
+    const resetButton = document.createElement('button');
+    resetButton.innerText = 'reset';
+    resetButton.addEventListener('click', () => {
       this.removeWaypoints();
     });
 
-    waypointUI.append(removeButton);
+    waypointUI.append(resetButton);
 
     this._waypointCounter = document.createElement('div');
     this.waypointCounter.classList.add('waypoint-counter');
