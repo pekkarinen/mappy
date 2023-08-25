@@ -43,9 +43,8 @@ const mapFeatures = [
   },
 ];
 
-const mapArray = [
-  [3, 0, 1, 0, 1, 0, 1, 1, 1, 0],
 const mapArray: MapArray = [
+  [0, 0, 1, 0, 1, 0, 1, 1, 1, 0],
   [0, 0, 1, 0, 2, 0, 1, 0, 1, 0],
   [0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
   [1, 0, 1, 1, 1, 0, 2, 1, 1, 0],
@@ -54,7 +53,7 @@ const mapArray: MapArray = [
   [0, 0, 2, 0, 2, 0, 2, 1, 0, 1],
   [1, 0, 2, 0, 2, 0, 0, 0, 0, 0],
   [1, 0, 0, 0, 0, 0, 1, 0, 1, 0],
-  [1, 1, 2, 1, 1, 0, 1, 0, 1, 4],
+  [1, 1, 2, 1, 1, 0, 1, 0, 1, 0],
 ];
 
 mapArray.forEach((row, y) => {
@@ -66,8 +65,8 @@ mapArray.forEach((row, y) => {
   });
 });
 
-const startPos = { x: 0, y: 0 };
-const endPos = { x: 9, y: 9 };
+map.addFeature(start, { x: 0, y: 0 });
+map.addFeature(end, { x: 9, y: 9 });
 
 /* data mockup */
 
