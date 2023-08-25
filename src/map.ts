@@ -87,9 +87,10 @@ class Map {
     try {
       this.checkBounds(coords);
       const textOrder = this.getWaypointsAt(coords).length;
+      const border = name ? `${textOrder + 1}px inset rgba(0,200,0,0.7)` : '3px groove goldenrod';
       const element = this.drawFeature(
         {
-          border: `${textOrder + 1}px inset rgba(0,200,0,0.7)`,
+          border,
           className: 'waypoint',
           text: name,
           textOrder,
@@ -101,6 +102,7 @@ class Map {
         coords,
         element,
       });
+      return { name, element, coords };
     } catch (e) {
       console.error(e.message);
     }
