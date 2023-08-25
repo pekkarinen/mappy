@@ -1,4 +1,4 @@
-import { Map } from './map';
+import { GridMap } from './map';
 import { Feature } from './items';
 import { UI } from './UI';
 import './mappy.css';
@@ -12,7 +12,7 @@ const mapConfig = {
   tileSize: 64,
 };
 
-const map = new Map(mapConfig);
+const map = new GridMap(mapConfig);
 
 app.append(map.DOMObject);
 

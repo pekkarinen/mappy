@@ -1,4 +1,4 @@
-class Map {
+class GridMap {
   _height: number;
   _width: number;
   _tileSize: number;
@@ -161,4 +161,4 @@ class Map {
   }
 }
 
-export { Map };
+export { GridMap };
