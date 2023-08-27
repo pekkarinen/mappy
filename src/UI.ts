@@ -200,7 +200,6 @@ class UI {
       }
       const [x, y] = path.at(-1) || [];
       this.currentPos = { x, y };
-      console.log(`${path.length}, ${accDelay}ms`);
       resolve(accDelay);
     });
   }
@@ -212,10 +211,7 @@ class UI {
   }
 
   removeWaypoints() {
-    this.map.waypoints.forEach((waypoint) => {
-      console.log(waypoint);
-      return this.map.removeFeature(waypoint.id);
-    });
+    this.map.waypoints.forEach((waypoint) => this.map.removeFeature(waypoint.id));
     this.currentPos = this.startPos;
     this.updateWaypointCount();
     this.waypointList.innerText = '';
