@@ -48,7 +48,7 @@ class GridMap {
   }
 
   get waypoints() {
-    return this._features.filter((feature) => feature instanceof Waypoint);
+    return this._features.filter(({ feature }) => feature instanceof Waypoint);
   }
 
   /* error handling */
