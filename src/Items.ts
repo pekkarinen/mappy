@@ -44,5 +44,12 @@ export class Feature extends Thing {
 export class Waypoint extends Feature {
   constructor(name: string, appearance: CSS.Properties) {
     super(name, null, appearance, 'waypoint');
+export class Actor extends Feature {
+  constructor(name: string) {
+    const style = {
+      borderRadius: '100px',
+      backgroundColor: 'red',
+    };
+    super(name, '', style, null, 'actor');
   }
 }
