@@ -60,28 +60,28 @@ class Pathfinder {
     return orderWaypointsByDistance(waypoints, coords);
   }
 
-  orderWaypointsBrute(waypoints: Array<MapFeature>, coords: Coords) {
+  orderWaypointsBrute(waypoints: Array<MapFeature>, start: MapFeature, goal: MapFeature) {
     let shortestRoute: MapFeature[] = [];
     let shortestRouteLength = Infinity;
-    let currentPos = coords;
 
     const permutations = generatePermutations(waypoints);
     for (const permutation of permutations) {
-      // let currentPos = permutation[0].coords;
+      const totalRoute = [start, ...permutation, goal];
+      let currentPos = permutation[0].coords;
       let routeLength = 0;
-      for (let i = 1; i < permutation.length; i++) {
-        const path = this.findPathTo(currentPos, permutation[i].coords);
+      for (let i = 1; i < totalRoute.length; i++) {
+        const path = this.findPathTo(currentPos, totalRoute[i].coords);
         routeLength += path.length;
         const [x, y] = path.at(-1) || [];
         currentPos = { x, y };
       }
-
       console.log('routeLength', routeLength);
       if (routeLength < shortestRouteLength) {
         shortestRoute = permutation;
         shortestRouteLength = routeLength;
       }
     }
+    console.log('shortestRoute', shortestRouteLength);
     return shortestRoute;
   }
 
