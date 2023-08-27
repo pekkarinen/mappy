@@ -61,8 +61,8 @@ class Pathfinder {
     return orderWaypointsByDistance(waypoints, coords);
   }
 
-  orderWaypointsBrute(waypoints: Array<Waypoint>, coords: Coords) {
-    let shortestRoute: Waypoint[] = [];
+  orderWaypointsBrute(waypoints: Array<MapFeature>, coords: Coords) {
+    let shortestRoute: MapFeature[] = [];
     let shortestRouteLength = Infinity;
 
     const permutations = generatePermutations(waypoints);
