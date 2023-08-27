@@ -125,31 +125,27 @@ class GridMap {
   }
 
   drawFeature(feature: Feature, coords: Coords) {
-    try {
-      this.checkCoords(coords);
-      const featureObj = document.createElement('div');
-      const featureStyle = {
-        boxSizing: 'border-box',
-        position: 'absolute',
-        width: `${this.tileSize}px`,
-        height: `${this.tileSize}px`,
-        left: `${coords.x * this.tileSize}px`,
-        top: `${coords.y * this.tileSize}px`,
-        ...feature.appearance,
-      };
+    this.checkCoords(coords);
+    const featureObj = document.createElement('div');
+    const featureStyle = {
+      boxSizing: 'border-box',
+      position: 'absolute',
+      width: `${this.tileSize}px`,
+      height: `${this.tileSize}px`,
+      left: `${coords.x * this.tileSize}px`,
+      top: `${coords.y * this.tileSize}px`,
+      ...feature.appearance,
+    };
 
-      if (feature.text) featureObj.innerText = feature.text;
+    if (feature.text) featureObj.innerText = feature.text;
 
-      const featuresAtPosition = this.getFeaturesAt(coords);
-      featureObj.classList.add(`label-order-${featuresAtPosition.length}`);
+    const featuresAtPosition = this.getFeaturesAt(coords);
+    featureObj.classList.add(`label-order-${featuresAtPosition.length}`);
 
-      featureObj.classList.add(feature.className);
-      Object.assign(featureObj.style, featureStyle);
-      this.DOMObject.append(featureObj);
-      return featureObj;
-    } catch (e) {
-      throw new Error(e.message);
-    }
+    featureObj.classList.add(feature.className);
+    Object.assign(featureObj.style, featureStyle);
+    this.DOMObject.append(featureObj);
+    return featureObj;
   }
 
   create() {
