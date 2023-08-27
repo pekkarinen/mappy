@@ -1,6 +1,7 @@
 import { Pathfinder } from './Pathfinder';
 import { GridMap } from './Map';
-import { Coords, MapArray, Waypoint } from './lib/types';
+import { Coords, MapArray } from './lib/types';
+import { Waypoint } from './Items';
 
 const lista = [
   'jauho',
