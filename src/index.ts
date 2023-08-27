@@ -1,6 +1,6 @@
 import { GridMap } from './Map';
 import { Feature } from './Items';
-// import { UI } from './UI';
+import { UI } from './UI';
 import { MapArray } from './lib/types';
 import './mappy.css';
 
@@ -77,4 +77,5 @@ const goalPos = { x: 9, y: 9 };
 map.addFeature(start, startPos);
 map.addFeature(end, goalPos);
 
+/* ui */
 new UI(app, mapArray, startPos, goalPos, map);
