@@ -287,18 +287,29 @@ class UI {
     waypointUI.append(routeButton);
 
     const smartButton = this.addUIButton('smart', async () => {
-      const waypoints = this.orderedWaypoints;
-      const route = [];
-      while (waypoints.length) {
-        const leg = this.pathfinder.orderWaypointsBrute(waypoints.splice(0, 3), this.currentPos);
-        route.push(...leg);
+      let waypoints = this.orderedWaypoints;
+      if (this.map.start && this.map.goal) {
+        const route = this.pathfinder.orderWaypointsBrute(waypoints, this.map.start, this.map.goal);
+
+        // while (waypoints.length) {
+        //   const legStart = route.at(-1)?.coords || this.currentPos;
+        //   waypoints = this.pathfinder.orderWaypointsEuclid(waypoints, legStart);
+        //   const leg = this.pathfinder.orderWaypointsBrute(waypoints.splice(0, 5), legStart);
+        //   console.log(leg.flatMap((wp) => wp.feature.name));
+        //   route.push(...leg);
+        // }
+        // const goal = this.map.goal;
+        // this._waypointList.innerHTML = this._waypointList.innerHTML
+        //   .concat('<br />')
+        //   .concat(`"Smart" ${this.getWaypointsAsText(route)}`);
+        // if (goal) route.push(goal);
+        // console.log(
+        //   'route',
+        //   route.flatMap((wp) => wp.feature.name)
+        // );
+        if (this.map.goal) route.push(this.map.goal);
+        this.animateRoute(route);
       }
-      const goal = this.map.goal;
-      this._waypointList.innerHTML = this._waypointList.innerHTML
-        .concat('<br />')
-        .concat(`"Smart" ${this.getWaypointsAsText(route)}`);
-      if (goal) route.push(goal);
-      this.animateRoute(route);
     });
 
     waypointUI.append(smartButton);
@@ -306,6 +317,7 @@ class UI {
     const resetButton = this.addUIButton('reset', () => {
       const actor = this.map.actor;
       if (actor) this.map.moveFeature(actor.id, this.startPos);
+      this.currentPos = this.startPos;
       this.removeWaypoints();
     });
 
