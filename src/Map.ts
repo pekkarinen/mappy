@@ -96,6 +96,15 @@ class GridMap {
     }
   }
 
+  moveFeature(index: number, coords: Coords) {
+    try {
+      const feature = this.features[index];
+      feature.element.style.left = `${coords.x * this.tileSize}px`;
+      feature.element.style.top = `${coords.y * this.tileSize}px`;
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
 
   drawFeature(feature: Feature, coords: Coords) {
     try {
