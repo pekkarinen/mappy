@@ -1,5 +1,5 @@
 import { MapConfig, Coords } from './lib/types';
-import { Waypoint, Feature } from './Items';
+import { Waypoint, Feature, Actor } from './Items';
 import { v4 as uuidv4 } from 'uuid';
 
 export type MapFeature = {
@@ -49,6 +49,10 @@ class GridMap {
 
   get waypoints() {
     return this._features.filter(({ feature }) => feature instanceof Waypoint);
+  }
+
+  get actor() {
+    return this.features.find(({ feature }) => feature instanceof Actor);
   }
 
   get start() {
