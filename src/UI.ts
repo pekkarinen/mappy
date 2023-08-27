@@ -192,7 +192,11 @@ class UI {
         const feature = new Waypoint('path', {
           border: '1px solid goldenrod',
         });
-        setTimeout(() => this.map.addFeature(feature, coords), accDelay);
+        setTimeout(() => {
+          const actor = this.map.actor;
+          if (actor) this.map.moveFeature(actor.id, coords);
+          this.map.addFeature(feature, coords);
+        }, accDelay);
         accDelay += delay;
       }
       const [x, y] = path.at(-1) || [];
