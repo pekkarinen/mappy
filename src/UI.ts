@@ -138,13 +138,14 @@ class UI {
   };
 
   addRandomWaypoints = (count = 5) => {
-    const validLocs = this.mapArray
-      .flatMap((row, y) =>
-        row.map((column, x) =>
-          column > 0 && this.getAdjacentSpaces({ x, y }).length > 0 ? { x, y } : null
-        )
-      )
-      .filter((coord) => coord !== null);
+    const validLocs: Array<Coords> = [];
+    this.mapArray.forEach((row, y) => {
+      row.forEach((column, x) => {
+        if (column > 0 && this.getAdjacentSpaces({ x, y }).length > 0) {
+          validLocs.push({ x, y });
+        }
+      });
+    });
 
     const treasures = this.getRandomItems(lista, count).map((item) => {
       const victim = Math.floor(Math.random() * validLocs.length);
