@@ -1,5 +1,5 @@
 import { GridMap } from './Map';
-import { Feature } from './Items';
+import { Feature, Actor } from './Items';
 import { UI } from './UI';
 import { MapArray } from './lib/types';
 import './mappy.css';
