@@ -64,7 +64,7 @@ class GridMap {
   }
 
   /* error handling */
-  checkBounds(coords: Coords) {
+  checkCoords(coords: Coords) {
     if (coords.x > this.width || coords.y > this.height || coords.x < 0 || coords.y < 0) {
       throw new Error('out of bounds!');
     }
@@ -82,7 +82,6 @@ class GridMap {
 
   addFeature(feature: Feature, coords: Coords) {
     try {
-      this.checkBounds(coords);
       const element = this.drawFeature(feature, coords);
       const mapFeature = {
         id: uuidv4(),
@@ -101,6 +100,7 @@ class GridMap {
     if (coords.x === undefined || coords.y === undefined || coords.x < 0 || coords.y < 0) {
       throw new Error('missing or invalid coords!');
     }
+    this.checkCoords(coords);
     return this.features.filter((feature) => {
       return feature.coords.x === coords.x && feature.coords.y === coords.y;
     });
@@ -127,12 +127,13 @@ class GridMap {
       return feature;
     } catch (e) {
       throw new Error(e.message);
+    this.checkCoords(coords);
     }
   }
 
   drawFeature(feature: Feature, coords: Coords) {
     try {
-      this.checkBounds(coords);
+      this.checkCoords(coords);
       const featureObj = document.createElement('div');
       const featureStyle = {
         boxSizing: 'border-box',
