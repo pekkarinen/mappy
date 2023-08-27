@@ -1,5 +1,4 @@
 import type * as CSS from 'csstype';
-import { Coords } from './lib/types';
 
 export class Thing {
   private _name: string;
@@ -43,17 +42,7 @@ export class Feature extends Thing {
 }
 
 export class Waypoint extends Feature {
-  _coords: Coords;
-  constructor(name: string, appearance: CSS.Properties, coords: Coords) {
-    super(name, null, appearance);
-    this._coords = coords;
+  constructor(name: string, appearance: CSS.Properties) {
+    super(name, null, appearance, 'waypoint');
   }
-
-  get coords() {
-    return this._coords;
-  }
-}
-
-export class Inventory {
-  inventory: Array<Thing>;
 }
