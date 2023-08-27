@@ -67,6 +67,7 @@ export class Actor extends Feature {
       alignItems: 'center',
       justifyContent: 'center',
       textShadow: '3px 3px 6px rgba(0,0,0,0.2)',
+      zIndex: 9999,
     };
     const symbol = '🤖';
     super(name, '', style, symbol, 'actor');
