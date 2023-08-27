@@ -228,7 +228,7 @@ class UI {
   addUIButton(text: string, func: Function) {
     const button = document.createElement('button');
     button.innerText = text;
-    button.addEventListener('click', (e) => func());
+    button.addEventListener('click', () => func());
     return button;
   }
 
