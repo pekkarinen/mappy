@@ -1,6 +1,5 @@
 import { AStarFinder } from 'astar-typescript';
 import { Coords, MapArray } from './lib/types';
-import { Waypoint } from './Items';
 import { MapFeature } from './Map';
 
 function calculateDistance(point1: Coords, point2: Coords) {
