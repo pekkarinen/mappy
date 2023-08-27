@@ -143,7 +143,6 @@ class GridMap {
       if (feature.text) featureObj.innerText = feature.text;
 
       const featuresAtPosition = this.getFeaturesAt(coords);
-      console.log(featuresAtPosition);
       featureObj.classList.add(`label-order-${featuresAtPosition.length}`);
 
       featureObj.classList.add(feature.className);
