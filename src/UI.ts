@@ -281,6 +281,24 @@ class UI {
 
     waypointUI.append(routeButton);
 
+    const smartButton = this.addUIButton('smart', async () => {
+      const currentPos = this.map.actor?.coords;
+      if (currentPos) {
+        const waypoints = this.orderedWaypoints;
+        const shortestFirst = waypoints.reduce(
+          (prev, curr, index) => {
+            const route = this.pathfinder.findPathTo(currentPos, curr.coords);
+            if (route.length < prev.length) return { index, route, length: route.length };
+            return prev;
+          },
+          { index: 0, route: [], length: Infinity }
+        );
+        console.log(shortestFirst);
+      }
+    });
+
+    waypointUI.append(smartButton);
+
     const resetButton = this.addUIButton('reset', () => {
       const actor = this.map.actor;
       if (actor) this.map.moveFeature(actor.id, this.startPos);
