@@ -1,4 +1,5 @@
 import { AStarFinder } from 'astar-typescript';
+import { Coords, Waypoint, MapArray } from './lib/types';
 
 function calculateDistance(point1: Coords, point2: Coords) {
   const dx = point2.x - point1.x;

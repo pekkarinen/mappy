@@ -1,6 +1,7 @@
-import { GridMap } from './map';
-import { Feature } from './items';
+import { GridMap } from './Map';
+import { Feature } from './Items';
 import { UI } from './UI';
+import { MapArray } from './lib/types';
 import './mappy.css';
 
 const app = document.createElement('div');
@@ -17,11 +18,12 @@ const map = new GridMap(mapConfig);
 
 app.append(map.DOMObject);
 
-const start = new Feature('Start', 'lähtö', 'green');
-const end = new Feature('Exit', 'loppu', 'red');
-const kaytava = new Feature('Käytävä', '', '');
-const tiski = new Feature('Tiski', 'tämmönen', 'gray');
-const kaappi = new Feature('Kaappi', 'semmonen', 'blue');
+const start = new Feature('Start', 'lähtö', { backgroundColor: 'green' });
+const end = new Feature('Exit', 'loppu', { backgroundColor: 'red' });
+const kaytava = new Feature('Käytävä', '', {});
+const tiski = new Feature('Tiski', 'tämmönen', { backgroundColor: 'darkgray' });
+const kaappi = new Feature('Kaappi', 'semmonen', { backgroundColor: 'blue' });
+
 const mapFeatures = [
   {
     id: 0,

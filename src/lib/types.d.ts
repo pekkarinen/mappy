@@ -1,3 +1,5 @@
+import type * as CSS from 'csstype';
+
 type MapConfig = {
   height: number;
   width: number;
@@ -9,26 +11,25 @@ type Coords = {
   y: number;
 };
 
-type MapArray = Array<Array<number>>;
-
 type Feature = {
   name?: string;
   description?: string;
-  background?: string;
-  border?: string;
   className?: string;
   text?: string;
   textOrder?: number;
+  appearance: CSS.Properties;
 };
 
 type Waypoint = {
-  name: string;
+  name?: string;
   coords: Coords;
   element?: HTMLElement;
 };
 
-type MapFeature = {
+export type MapFeature = {
   feature: Feature;
   coords: Coords;
   element: HTMLElement;
 };
+
+export type MapArray = Array<Array<number>>;

@@ -1,5 +1,6 @@
-import { Pathfinder } from './pathfinder';
-import { GridMap } from './map';
+import { Pathfinder } from './Pathfinder';
+import { GridMap } from './Map';
+import { Coords, MapArray, Waypoint } from './lib/types';
 
 const lista = [
   'jauho',
@@ -152,7 +153,15 @@ class UI {
 
     treasures.forEach((treasure) => {
       if (this.map.getWaypointsAt(treasure.coords).length < 3) {
-        const waypoint = this.map.addWaypoint(treasure.item, treasure.coords);
+        const waypoint = this.map.addFeature(
+          {
+            name: treasure.item,
+            appearance: {
+              border: '1px solid green',
+            },
+          },
+          treasure.coords
+        );
         waypoint.element.addEventListener('click', (e) => {
           e.preventDefault();
           this.getPathToWaypoint(waypoint);
@@ -171,7 +180,7 @@ class UI {
       for (const node of path) {
         const [x, y] = node;
         const coords = { x, y };
-        setTimeout(() => this.map.addWaypoint(null, coords), accDelay);
+        setTimeout(() => this.map.addFeature(null, coords), accDelay);
         accDelay += delay;
       }
       const [x, y] = path.at(-1);

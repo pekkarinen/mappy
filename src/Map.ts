@@ -1,3 +1,5 @@
+import { MapFeature, MapConfig, Waypoint, Coords, Feature } from './lib/types';
+
 class GridMap {
   _height: number;
   _width: number;
@@ -68,6 +70,7 @@ class GridMap {
         coords,
         element,
       });
+      return { element, coords };
     } catch (e) {
       console.error(e.message);
     }
@@ -81,31 +84,6 @@ class GridMap {
     return this._waypoints.filter((waypoint) => {
       return waypoint.coords.x === coords.x && waypoint.coords.y === coords.y;
     });
-  }
-
-  addWaypoint(name: string, coords: Coords) {
-    try {
-      this.checkBounds(coords);
-      const textOrder = this.getWaypointsAt(coords).length;
-      const border = name ? `${textOrder + 1}px inset rgba(0,200,0,0.7)` : '3px groove goldenrod';
-      const element = this.drawFeature(
-        {
-          border,
-          className: 'waypoint',
-          text: name,
-          textOrder,
-        },
-        coords
-      );
-      this._waypoints.push({
-        name,
-        coords,
-        element,
-      });
-      return { name, element, coords };
-    } catch (e) {
-      console.error(e.message);
-    }
   }
 
   removeWaypoint(index: number) {
@@ -125,12 +103,11 @@ class GridMap {
       const featureStyle = {
         boxSizing: 'border-box',
         position: 'absolute',
-        background: feature.background,
-        border: feature.border ? feature.border : '1px solid darkgray',
         width: `${this.tileSize}px`,
         height: `${this.tileSize}px`,
         left: `${coords.x * this.tileSize}px`,
         top: `${coords.y * this.tileSize}px`,
+        ...feature.appearance,
       };
 
       if (feature.text) {
