@@ -277,6 +277,8 @@ class UI {
     waypointUI.append(routeButton);
 
     const resetButton = this.addUIButton('reset', () => {
+      const actor = this.map.actor;
+      if (actor) this.map.moveFeature(actor.id, this.startPos);
       this.removeWaypoints();
     });
 
