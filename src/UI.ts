@@ -234,6 +234,14 @@ class UI {
     return button;
   }
 
+  async animateRoute(waypoints: Array<MapFeature>) {
+    for (let i = 0; i < waypoints.length; i++) {
+      const waypoint = waypoints[i];
+      const delay = await this.getPathToWaypoint(waypoint, `${i}`);
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+  }
+
   get orderedWaypoints() {
     const orderedWaypoints = this.pathfinder.orderWaypointsEuclid(
       this.map.waypoints,
@@ -273,11 +281,7 @@ class UI {
       const waypoints = this.orderedWaypoints;
       const goal = this.map.goal;
       if (goal) waypoints.push(goal);
-      for (let i = 0; i < waypoints.length; i++) {
-        const waypoint = waypoints[i];
-        const delay = await this.getPathToWaypoint(waypoint, `${i}`);
-        await new Promise((resolve) => setTimeout(resolve, delay));
-      }
+      this.animateRoute(waypoints);
     });
 
     waypointUI.append(routeButton);
