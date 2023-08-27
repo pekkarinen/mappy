@@ -63,8 +63,10 @@ const mapArray: MapArray = [
 mapArray.forEach((row, y) => {
   row.forEach((column, x) => {
     if (column > 0) {
-      const { feature } = mapFeatures.find((feature) => feature.id === column);
-      map.addFeature(feature, { x, y });
+      const mapFeature = mapFeatures.find((feature) => feature.id === column);
+      if (mapFeature) {
+        map.addFeature(mapFeature.feature, { x, y });
+      }
     }
   });
 });
