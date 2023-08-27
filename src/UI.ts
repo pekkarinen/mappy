@@ -181,7 +181,7 @@ class UI {
     this.waypointList.innerText = this.getWaypointsAsText(this.map.waypoints);
   };
 
-  async getPathToWaypoint(waypoint: MapFeature) {
+  async getPathToWaypoint(waypoint: MapFeature, step = '') {
     const path = this.pathfinder.findPathTo(this.currentPos, waypoint.coords);
     const delay = 100;
     let accDelay = 0;
@@ -189,9 +189,13 @@ class UI {
       for (const node of path) {
         const [x, y] = node;
         const coords = { x, y };
-        const feature = new Waypoint('path', {
-          border: '1px solid goldenrod',
-        });
+        const feature = new Waypoint(
+          'path',
+          {
+            border: '1px solid goldenrod',
+          },
+          step
+        );
         setTimeout(() => {
           const actor = this.map.actor;
           if (actor) this.map.moveFeature(actor.id, coords);
@@ -268,8 +272,9 @@ class UI {
       const waypoints = this.orderedWaypoints;
       const goal = this.map.goal;
       if (goal) waypoints.push(goal);
-      for (const waypoint of waypoints) {
-        const delay = await this.getPathToWaypoint(waypoint);
+      for (let i = 0; i < waypoints.length; i++) {
+        const waypoint = waypoints[i];
+        const delay = await this.getPathToWaypoint(waypoint, `${i}`);
         await new Promise((resolve) => setTimeout(resolve, delay));
       }
     });
