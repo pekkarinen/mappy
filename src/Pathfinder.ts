@@ -71,7 +71,7 @@ class Pathfinder {
       for (let i = 1; i < permutation.length; i++) {
         const path = this.findPathTo(currentPos, permutation[i].coords);
         routeLength += path.length;
-        const [x, y] = path.at(-1);
+        const [x, y] = path.at(-1) || [];
         currentPos = { x, y };
       }
 
