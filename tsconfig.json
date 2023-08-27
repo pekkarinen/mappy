@@ -8,5 +8,6 @@
     "allowJs": true,
     "moduleResolution": "node",
     "strictNullChecks": true
-  }
+  },
+  "exclude": ["src/UI.ts"]
 }
