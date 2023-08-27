@@ -270,7 +270,7 @@ class UI {
       }
     });
 
-    waypointUI.append(shortestButton);
+    // waypointUI.append(shortestButton);
 
     const resetButton = this.addUIButton('reset', () => {
       this.removeWaypoints();
