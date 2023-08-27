@@ -1,5 +1,5 @@
 import { Pathfinder } from './Pathfinder';
-import { GridMap } from './Map';
+import { MapFeature, GridMap } from './Map';
 import { Coords, MapArray } from './lib/types';
 import { Waypoint } from './Items';
 
@@ -155,18 +155,21 @@ class UI {
 
     treasures.forEach((treasure) => {
       if (this.map.getWaypointsAt(treasure.coords).length < 3) {
-        const waypoint = this.map.addFeature(
+        const waypoint = new Waypoint(
+          treasure.item,
           {
-            name: treasure.item,
-            appearance: {
-              border: '1px solid green',
-            },
+            border: '1px solid green',
           },
           treasure.coords
         );
-        waypoint.element.addEventListener('click', (e) => {
+        const waypointElement = this.map.addFeature(waypoint, treasure.coords);
+        waypointElement.element.addEventListener('click', (e) => {
           e.preventDefault();
-          this.getPathToWaypoint(waypoint);
+          this.getPathToWaypoint({
+            feature: waypoint,
+            coords: treasure.coords,
+            element: waypointElement.element,
+          });
         });
       }
     });
@@ -174,7 +177,7 @@ class UI {
     this.waypointList.innerText = this.getWaypointsAsText(this.map.waypoints);
   };
 
-  async getPathToWaypoint(waypoint: Waypoint) {
+  async getPathToWaypoint(waypoint: MapFeature) {
     const path = this.pathfinder.findPathTo(this.currentPos, waypoint.coords);
     const delay = 100;
     let accDelay = 0;
@@ -182,19 +185,26 @@ class UI {
       for (const node of path) {
         const [x, y] = node;
         const coords = { x, y };
-        setTimeout(() => this.map.addFeature(null, coords), accDelay);
+        const feature = new Waypoint(
+          'path',
+          {
+            border: '1px solid goldenrod',
+          },
+          coords
+        );
+        setTimeout(() => this.map.addFeature(feature, coords), accDelay);
         accDelay += delay;
       }
-      const [x, y] = path.at(-1);
+      const [x, y] = path.at(-1) || [];
       this.currentPos = { x, y };
       console.log(`${path.length}, ${accDelay}ms`);
       resolve(accDelay);
     });
   }
 
-  getWaypointsAsText(waypoints: Array<Waypoint>) {
+  getWaypointsAsText(waypoints: Array<MapFeature>) {
     return waypoints
-      .map((waypoint) => `${waypoint.name} [${waypoint.coords.x}, ${waypoint.coords.y}]`)
+      .map((waypoint) => `${waypoint.feature.name} [${waypoint.coords.x}, ${waypoint.coords.y}]`)
       .join(', ');
   }
 
@@ -259,7 +269,7 @@ class UI {
 
     const routeButton = this.addUIButton('route', async () => {
       const waypoints = this.orderedWaypoints;
-      waypoints.push({ name: 'goal', coords: this.goalPos });
+      // waypoints.push({ feature: { name: 'goal' }, coords: this.goalPos });
       for (const waypoint of waypoints) {
         const delay = await this.getPathToWaypoint(waypoint);
         await new Promise((resolve) => setTimeout(resolve, delay));

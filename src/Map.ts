@@ -1,4 +1,11 @@
-import { MapFeature, MapConfig, Waypoint, Coords, Feature } from './lib/types';
+import { MapConfig, Coords } from './lib/types';
+import { Waypoint, Feature } from './Items';
+
+export type MapFeature = {
+  feature: Feature | Waypoint;
+  coords: Coords;
+  element: HTMLElement;
+};
 
 class GridMap {
   _height: number;
@@ -6,7 +13,7 @@ class GridMap {
   _tileSize: number;
   _features: Array<MapFeature>;
   _DOMObject: HTMLElement;
-  _waypoints: Array<Waypoint>;
+  _waypoints: Array<MapFeature>;
 
   constructor({ height, width, tileSize }: MapConfig) {
     this._height = height;
@@ -41,7 +48,7 @@ class GridMap {
   }
 
   get waypoints() {
-    return this._waypoints;
+    return this._features.filter((feature) => feature.element.className === 'waypoint');
   }
 
   /* error handling */
@@ -72,14 +79,14 @@ class GridMap {
       });
       return { element, coords };
     } catch (e) {
-      console.error(e.message);
+      throw new Error(e.message);
     }
   }
 
   getWaypointsAt(coords: Coords) {
     if (coords.x === undefined || coords.y === undefined || coords.x < 0 || coords.y < 0) {
       console.error('missing or invalid coords!');
-      return;
+      return [];
     }
     return this._waypoints.filter((waypoint) => {
       return waypoint.coords.x === coords.x && waypoint.coords.y === coords.y;
@@ -98,29 +105,24 @@ class GridMap {
   }
 
   drawFeature(feature: Feature, coords: Coords) {
-    try {
-      const featureObj = document.createElement('div');
-      const featureStyle = {
-        boxSizing: 'border-box',
-        position: 'absolute',
-        width: `${this.tileSize}px`,
-        height: `${this.tileSize}px`,
-        left: `${coords.x * this.tileSize}px`,
-        top: `${coords.y * this.tileSize}px`,
-        ...feature.appearance,
-      };
+    const featureObj = document.createElement('div');
+    const featureStyle = {
+      boxSizing: 'border-box',
+      position: 'absolute',
+      width: `${this.tileSize}px`,
+      height: `${this.tileSize}px`,
+      left: `${coords.x * this.tileSize}px`,
+      top: `${coords.y * this.tileSize}px`,
+      ...feature.appearance,
+    };
 
-      if (feature.text) {
-        featureObj.innerText = feature.text;
-        featureObj.classList.add(`label-order-${feature.textOrder}`);
-      }
-      featureObj.classList.add(feature.className || 'feature');
-      Object.assign(featureObj.style, featureStyle);
-      this.DOMObject.append(featureObj);
-      return featureObj;
-    } catch (e) {
-      console.error(e.message);
-    }
+    featureObj.innerText = feature.name;
+    // featureObj.classList.add(`label-order-${feature.textOrder}`);
+
+    featureObj.classList.add(feature.className);
+    Object.assign(featureObj.style, featureStyle);
+    this.DOMObject.append(featureObj);
+    return featureObj;
   }
 
   create() {

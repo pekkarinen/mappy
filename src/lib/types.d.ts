@@ -9,10 +9,4 @@ type Coords = {
   y: number;
 };
 
-export type MapFeature = {
-  feature: Feature;
-  coords: Coords;
-  element: HTMLElement;
-};
-
 export type MapArray = Array<Array<number>>;

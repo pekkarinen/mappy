@@ -1,6 +1,7 @@
 import { AStarFinder } from 'astar-typescript';
 import { Coords, MapArray } from './lib/types';
 import { Waypoint } from './Items';
+import { MapFeature } from './Map';
 
 function calculateDistance(point1: Coords, point2: Coords) {
   const dx = point2.x - point1.x;
@@ -8,7 +9,7 @@ function calculateDistance(point1: Coords, point2: Coords) {
   return Math.sqrt(dx * dx + dy * dy);
 }
 
-function orderWaypointsByDistance(waypoints: Array<Waypoint>, referencePoint: Coords) {
+function orderWaypointsByDistance(waypoints: Array<MapFeature>, referencePoint: Coords) {
   return waypoints.slice().sort((waypoint1, waypoint2) => {
     const distance1 = calculateDistance(referencePoint, waypoint1.coords);
     const distance2 = calculateDistance(referencePoint, waypoint2.coords);
@@ -56,7 +57,7 @@ class Pathfinder {
     return this._walkableMatrix;
   }
 
-  orderWaypointsEuclid(waypoints: Array<Waypoint>, coords: Coords) {
+  orderWaypointsEuclid(waypoints: Array<MapFeature>, coords: Coords) {
     return orderWaypointsByDistance(waypoints, coords);
   }
 
