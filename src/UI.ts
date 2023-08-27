@@ -162,9 +162,14 @@ class UI {
 
     treasures.forEach((treasure) => {
       if (this.getWaypointsAt(treasure.coords).length < 3) {
-        const waypoint = new Waypoint(treasure.item, {
-          border: '1px solid green',
-        });
+        const waypoint = new Waypoint(
+          treasure.item,
+          {
+            border: '1px solid green',
+          },
+          treasure.item,
+          'waypoint'
+        );
         const newWaypoint = this.map.addFeature(waypoint, treasure.coords);
         newWaypoint.element.addEventListener('click', (e) => {
           e.preventDefault();

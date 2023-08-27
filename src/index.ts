@@ -18,8 +18,8 @@ const map = new GridMap(mapConfig);
 
 app.append(map.DOMObject);
 
-const start = new Feature('start', 'lähtö', { backgroundColor: 'green' });
-const end = new Feature('goal', 'loppu', { backgroundColor: 'red' });
+const start = new Feature('start', 'lähtö', { backgroundColor: 'green' }, 'start');
+const end = new Feature('goal', 'loppu', { backgroundColor: 'red' }, 'goal');
 const kaytava = new Feature('Käytävä', '', {});
 const tiski = new Feature('Tiski', 'tämmönen', { backgroundColor: 'darkgray' });
 const kaappi = new Feature('Kaappi', 'semmonen', { backgroundColor: 'blue' });
