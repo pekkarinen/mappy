@@ -80,26 +80,25 @@ class GridMap {
     }
   }
 
-  addFeature(feature: Feature, coords: Coords) {
-    try {
-      const element = this.drawFeature(feature, coords);
-      const mapFeature = {
-        id: uuidv4(),
-        feature,
-        coords,
-        element,
-      };
-      this._features.push(mapFeature);
-      return mapFeature;
-    } catch (e) {
-      throw new Error(e.message);
+  checkFeature(id: string) {
+    if (!this.features.find((feature) => feature.id === id)) {
+      throw new Error('No such Feature!');
     }
   }
 
+  addFeature(feature: Feature, coords: Coords) {
+    const element = this.drawFeature(feature, coords);
+    const mapFeature = {
+      id: uuidv4(),
+      feature,
+      coords,
+      element,
+    };
+    this._features.push(mapFeature);
+    return mapFeature;
+  }
+
   getFeaturesAt(coords: Coords) {
-    if (coords.x === undefined || coords.y === undefined || coords.x < 0 || coords.y < 0) {
-      throw new Error('missing or invalid coords!');
-    }
     this.checkCoords(coords);
     return this.features.filter((feature) => {
       return feature.coords.x === coords.x && feature.coords.y === coords.y;
@@ -107,28 +106,22 @@ class GridMap {
   }
 
   removeFeature(id: string) {
-    try {
-      const featureIndex = this.features.findIndex((feature) => feature.id === id);
-      const feature = this.features.splice(featureIndex, 1)[0];
-      feature.element.remove();
-      return feature;
-    } catch (e) {
-      throw new Error(`no such feature or ${e.message}`);
-    }
+    this.checkFeature(id);
+    const featureIndex = this.features.findIndex((feature) => feature.id === id);
+    const feature = this.features.splice(featureIndex, 1)[0];
+    feature.element.remove();
+    return feature;
   }
 
   moveFeature(id: string, coords: Coords) {
-    try {
-      const feature = this.features.find((feature) => feature.id === id);
-      if (feature) {
-        feature.element.style.left = `${coords.x * this.tileSize}px`;
-        feature.element.style.top = `${coords.y * this.tileSize}px`;
-      }
-      return feature;
-    } catch (e) {
-      throw new Error(e.message);
+    this.checkFeature(id);
     this.checkCoords(coords);
+    const feature = this.features.find((feature) => feature.id === id);
+    if (feature) {
+      feature.element.style.left = `${coords.x * this.tileSize}px`;
+      feature.element.style.top = `${coords.y * this.tileSize}px`;
     }
+    return feature;
   }
 
   drawFeature(feature: Feature, coords: Coords) {
