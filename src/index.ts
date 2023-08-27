@@ -77,5 +77,8 @@ const goalPos = { x: 9, y: 9 };
 map.addFeature(start, startPos);
 map.addFeature(end, goalPos);
 
+const actor = new Actor('player1');
+map.addFeature(actor, startPos);
+
 /* ui */
 new UI(app, mapArray, startPos, goalPos, map);
