@@ -1,7 +1,9 @@
 import { MapConfig, Coords } from './lib/types';
 import { Waypoint, Feature } from './Items';
+import { v4 as uuidv4 } from 'uuid';
 
 export type MapFeature = {
+  id: string;
   feature: Feature | Waypoint;
   coords: Coords;
   element: HTMLElement;
@@ -67,6 +69,7 @@ class GridMap {
       this.checkBounds(coords);
       const element = this.drawFeature(feature, coords);
       this._features.push({
+        id: uuidv4(),
         feature,
         coords,
         element,
@@ -86,9 +89,10 @@ class GridMap {
     });
   }
 
-  removeFeature(index: number) {
+  removeFeature(id: string) {
     try {
-      const feature = this.features.splice(index, 1)[0];
+      const featureIndex = this.features.findIndex((feature) => feature.id === id);
+      const feature = this.features.splice(featureIndex, 0)[0];
       feature.element.remove();
       return feature;
     } catch (e) {
@@ -96,11 +100,14 @@ class GridMap {
     }
   }
 
-  moveFeature(index: number, coords: Coords) {
+  moveFeature(id: string, coords: Coords) {
     try {
-      const feature = this.features[index];
-      feature.element.style.left = `${coords.x * this.tileSize}px`;
-      feature.element.style.top = `${coords.y * this.tileSize}px`;
+      const feature = this.features.find((feature) => feature.id === id);
+      if (feature) {
+        feature.element.style.left = `${coords.x * this.tileSize}px`;
+        feature.element.style.top = `${coords.y * this.tileSize}px`;
+      }
+      return feature;
     } catch (e) {
       throw new Error(e.message);
     }
