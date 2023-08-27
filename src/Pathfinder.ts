@@ -64,10 +64,11 @@ class Pathfinder {
   orderWaypointsBrute(waypoints: Array<MapFeature>, coords: Coords) {
     let shortestRoute: MapFeature[] = [];
     let shortestRouteLength = Infinity;
+    let currentPos = coords;
 
     const permutations = generatePermutations(waypoints);
     for (const permutation of permutations) {
-      let currentPos = permutation[0].coords;
+      // let currentPos = permutation[0].coords;
       let routeLength = 0;
       for (let i = 1; i < permutation.length; i++) {
         const path = this.findPathTo(currentPos, permutation[i].coords);
