@@ -169,14 +169,10 @@ class UI {
           },
           treasure.coords
         );
-        const waypointElement = this.map.addFeature(waypoint, treasure.coords);
-        waypointElement.element.addEventListener('click', (e) => {
+        const newWaypoint = this.map.addFeature(waypoint, treasure.coords);
+        newWaypoint.element.addEventListener('click', (e) => {
           e.preventDefault();
-          this.getPathToWaypoint({
-            feature: waypoint,
-            coords: treasure.coords,
-            element: waypointElement.element,
-          });
+          this.getPathToWaypoint(newWaypoint);
         });
       }
     });
@@ -216,7 +212,10 @@ class UI {
   }
 
   removeWaypoints() {
-    this.map.waypoints.forEach((waypoint) => this.map.removeFeature(waypoint.id));
+    this.map.waypoints.forEach((waypoint) => {
+      console.log(waypoint);
+      return this.map.removeFeature(waypoint.id);
+    });
     this.currentPos = this.startPos;
     this.updateWaypointCount();
     this.waypointList.innerText = '';
@@ -278,21 +277,6 @@ class UI {
     });
 
     waypointUI.append(routeButton);
-
-    const shortestButton = this.addUIButton('shortest', async () => {
-      const waypoints = this.map.waypoints;
-      // waypoints.push({ name: 'goal', coords: this.goalPos });
-      const shortestRoute = this.pathfinder.orderWaypointsBrute(waypoints, this.startPos);
-      shortestRoute.push({ name: 'goal', coords: this.goalPos });
-      this.waypointList.innerText = `Shortest route: ${this.getWaypointsAsText(shortestRoute)}`;
-
-      for (const waypoint of shortestRoute) {
-        const delay = await this.getPathToWaypoint(waypoint);
-        await new Promise((resolve) => setTimeout(resolve, delay));
-      }
-    });
-
-    waypointUI.append(shortestButton);
 
     const resetButton = this.addUIButton('reset', () => {
       this.removeWaypoints();
