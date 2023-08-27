@@ -47,6 +47,10 @@ class GridMap {
     return this._DOMObject;
   }
 
+  get waypoints() {
+    return this._features.filter((feature) => feature instanceof Waypoint);
+  }
+
   /* error handling */
   checkBounds(coords: Coords) {
     if (coords.x > this.width || coords.y > this.height || coords.x < 0 || coords.y < 0) {

@@ -137,6 +137,13 @@ class UI {
     return randomItems;
   };
 
+  getWaypointsAt(coords: Coords) {
+    const waypoints = this.map
+      .getFeaturesAt(coords)
+      .filter((feature) => feature instanceof Waypoint);
+    return waypoints;
+  }
+
   addRandomWaypoints = (count = 5) => {
     const validLocs: Array<Coords> = [];
     this.mapArray.forEach((row, y) => {
@@ -154,7 +161,7 @@ class UI {
     });
 
     treasures.forEach((treasure) => {
-      if (this.map.getWaypointsAt(treasure.coords).length < 3) {
+      if (this.getWaypointsAt(treasure.coords).length < 3) {
         const waypoint = new Waypoint(
           treasure.item,
           {
@@ -209,9 +216,7 @@ class UI {
   }
 
   removeWaypoints() {
-    while (this.map.waypoints.length) {
-      this.map.removeWaypoint(0);
-    }
+    this.map.waypoints.forEach((waypoint) => this.map.removeFeature(waypoint.id));
     this.currentPos = this.startPos;
     this.updateWaypointCount();
     this.waypointList.innerText = '';
@@ -263,10 +268,6 @@ class UI {
 
     waypointUI.append(orderButton);
 
-    // const routeIndicator = document.createElement('div');
-    // routeIndicator.innerText = 'foo';
-    // waypointUI.append(routeIndicator);
-
     const routeButton = this.addUIButton('route', async () => {
       const waypoints = this.orderedWaypoints;
       // waypoints.push({ feature: { name: 'goal' }, coords: this.goalPos });
@@ -291,7 +292,7 @@ class UI {
       }
     });
 
-    // waypointUI.append(shortestButton);
+    waypointUI.append(shortestButton);
 
     const resetButton = this.addUIButton('reset', () => {
       this.removeWaypoints();
