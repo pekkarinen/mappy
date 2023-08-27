@@ -257,7 +257,8 @@ class UI {
 
     const routeButton = this.addUIButton('route', async () => {
       const waypoints = this.orderedWaypoints;
-      // waypoints.push({ feature: { name: 'goal' }, coords: this.goalPos });
+      const goal = this.map.goal;
+      if (goal) waypoints.push(goal);
       for (const waypoint of waypoints) {
         const delay = await this.getPathToWaypoint(waypoint);
         await new Promise((resolve) => setTimeout(resolve, delay));
