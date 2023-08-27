@@ -97,7 +97,7 @@ class GridMap {
   removeFeature(id: string) {
     try {
       const featureIndex = this.features.findIndex((feature) => feature.id === id);
-      const feature = this.features.splice(featureIndex, 0)[0];
+      const feature = this.features.splice(featureIndex, 1)[0];
       feature.element.remove();
       return feature;
     } catch (e) {
