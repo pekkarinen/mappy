@@ -51,6 +51,14 @@ class GridMap {
     return this._features.filter(({ feature }) => feature instanceof Waypoint);
   }
 
+  get start() {
+    return this.features.find(({ feature }) => feature.name === 'start');
+  }
+
+  get goal() {
+    return this.features.find(({ feature }) => feature.name === 'goal');
+  }
+
   /* error handling */
   checkBounds(coords: Coords) {
     if (coords.x > this.width || coords.y > this.height || coords.x < 0 || coords.y < 0) {
