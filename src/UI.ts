@@ -287,19 +287,18 @@ class UI {
     waypointUI.append(routeButton);
 
     const smartButton = this.addUIButton('smart', async () => {
-      const currentPos = this.map.actor?.coords;
-      if (currentPos) {
-        const waypoints = this.orderedWaypoints;
-        const shortestFirst = waypoints.reduce(
-          (prev, curr, index) => {
-            const route = this.pathfinder.findPathTo(currentPos, curr.coords);
-            if (route.length < prev.length) return { index, route, length: route.length };
-            return prev;
-          },
-          { index: 0, route: [], length: Infinity }
-        );
-        console.log(shortestFirst);
+      const waypoints = this.orderedWaypoints;
+      const route = [];
+      while (waypoints.length) {
+        const leg = this.pathfinder.orderWaypointsBrute(waypoints.splice(0, 3), this.currentPos);
+        route.push(...leg);
       }
+      const goal = this.map.goal;
+      this._waypointList.innerHTML = this._waypointList.innerHTML
+        .concat('<br />')
+        .concat(`"Smart" ${this.getWaypointsAsText(route)}`);
+      if (goal) route.push(goal);
+      this.animateRoute(route);
     });
 
     waypointUI.append(smartButton);
