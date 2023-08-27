@@ -162,13 +162,9 @@ class UI {
 
     treasures.forEach((treasure) => {
       if (this.getWaypointsAt(treasure.coords).length < 3) {
-        const waypoint = new Waypoint(
-          treasure.item,
-          {
-            border: '1px solid green',
-          },
-          treasure.coords
-        );
+        const waypoint = new Waypoint(treasure.item, {
+          border: '1px solid green',
+        });
         const newWaypoint = this.map.addFeature(waypoint, treasure.coords);
         newWaypoint.element.addEventListener('click', (e) => {
           e.preventDefault();
@@ -188,13 +184,9 @@ class UI {
       for (const node of path) {
         const [x, y] = node;
         const coords = { x, y };
-        const feature = new Waypoint(
-          'path',
-          {
-            border: '1px solid goldenrod',
-          },
-          coords
-        );
+        const feature = new Waypoint('path', {
+          border: '1px solid goldenrod',
+        });
         setTimeout(() => this.map.addFeature(feature, coords), accDelay);
         accDelay += delay;
       }
