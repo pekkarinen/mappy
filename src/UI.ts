@@ -1,5 +1,7 @@
-import { Pathfinder } from './pathfinder';
-import { GridMap } from './map';
+import { Pathfinder } from './Pathfinder';
+import { MapFeature, GridMap } from './Map';
+import { Coords, MapArray } from './lib/types';
+import { Waypoint } from './Items';
 
 const lista = [
   'jauho',
@@ -135,14 +137,22 @@ class UI {
     return randomItems;
   };
 
+  getWaypointsAt(coords: Coords) {
+    const waypoints = this.map
+      .getFeaturesAt(coords)
+      .filter((feature) => feature instanceof Waypoint);
+    return waypoints;
+  }
+
   addRandomWaypoints = (count = 5) => {
-    const validLocs = this.mapArray
-      .flatMap((row, y) =>
-        row.map((column, x) =>
-          column > 0 && this.getAdjacentSpaces({ x, y }).length > 0 ? { x, y } : null
-        )
-      )
-      .filter((coord) => coord !== null);
+    const validLocs: Array<Coords> = [];
+    this.mapArray.forEach((row, y) => {
+      row.forEach((column, x) => {
+        if (column > 0 && this.getAdjacentSpaces({ x, y }).length > 0) {
+          validLocs.push({ x, y });
+        }
+      });
+    });
 
     const treasures = this.getRandomItems(lista, count).map((item) => {
       const victim = Math.floor(Math.random() * validLocs.length);
@@ -151,11 +161,19 @@ class UI {
     });
 
     treasures.forEach((treasure) => {
-      if (this.map.getWaypointsAt(treasure.coords).length < 3) {
-        const waypoint = this.map.addWaypoint(treasure.item, treasure.coords);
-        waypoint.element.addEventListener('click', (e) => {
+      if (this.getWaypointsAt(treasure.coords).length < 3) {
+        const waypoint = new Waypoint(
+          treasure.item,
+          {
+            border: '1px solid green',
+          },
+          treasure.item,
+          'waypoint'
+        );
+        const newWaypoint = this.map.addFeature(waypoint, treasure.coords);
+        newWaypoint.element.addEventListener('click', (e) => {
           e.preventDefault();
-          this.getPathToWaypoint(waypoint);
+          this.getPathToWaypoint(newWaypoint);
         });
       }
     });
@@ -163,7 +181,7 @@ class UI {
     this.waypointList.innerText = this.getWaypointsAsText(this.map.waypoints);
   };
 
-  async getPathToWaypoint(waypoint: Waypoint) {
+  async getPathToWaypoint(waypoint: MapFeature) {
     const path = this.pathfinder.findPathTo(this.currentPos, waypoint.coords);
     const delay = 100;
     let accDelay = 0;
@@ -171,26 +189,26 @@ class UI {
       for (const node of path) {
         const [x, y] = node;
         const coords = { x, y };
-        setTimeout(() => this.map.addWaypoint(null, coords), accDelay);
+        const feature = new Waypoint('path', {
+          border: '1px solid goldenrod',
+        });
+        setTimeout(() => this.map.addFeature(feature, coords), accDelay);
         accDelay += delay;
       }
-      const [x, y] = path.at(-1);
+      const [x, y] = path.at(-1) || [];
       this.currentPos = { x, y };
-      console.log(`${path.length}, ${accDelay}ms`);
       resolve(accDelay);
     });
   }
 
-  getWaypointsAsText(waypoints: Array<Waypoint>) {
+  getWaypointsAsText(waypoints: Array<MapFeature>) {
     return waypoints
-      .map((waypoint) => `${waypoint.name} [${waypoint.coords.x}, ${waypoint.coords.y}]`)
+      .map((waypoint) => `${waypoint.feature.name} [${waypoint.coords.x}, ${waypoint.coords.y}]`)
       .join(', ');
   }
 
   removeWaypoints() {
-    while (this.map.waypoints.length) {
-      this.map.removeWaypoint(0);
-    }
+    this.map.waypoints.forEach((waypoint) => this.map.removeFeature(waypoint.id));
     this.currentPos = this.startPos;
     this.updateWaypointCount();
     this.waypointList.innerText = '';
@@ -203,7 +221,7 @@ class UI {
   addUIButton(text: string, func: Function) {
     const button = document.createElement('button');
     button.innerText = text;
-    button.addEventListener('click', (e) => func());
+    button.addEventListener('click', () => func());
     return button;
   }
 
@@ -242,13 +260,10 @@ class UI {
 
     waypointUI.append(orderButton);
 
-    // const routeIndicator = document.createElement('div');
-    // routeIndicator.innerText = 'foo';
-    // waypointUI.append(routeIndicator);
-
     const routeButton = this.addUIButton('route', async () => {
       const waypoints = this.orderedWaypoints;
-      waypoints.push({ name: 'goal', coords: this.goalPos });
+      const goal = this.map.goal;
+      if (goal) waypoints.push(goal);
       for (const waypoint of waypoints) {
         const delay = await this.getPathToWaypoint(waypoint);
         await new Promise((resolve) => setTimeout(resolve, delay));
@@ -256,21 +271,6 @@ class UI {
     });
 
     waypointUI.append(routeButton);
-
-    const shortestButton = this.addUIButton('shortest', async () => {
-      const waypoints = this.map.waypoints;
-      // waypoints.push({ name: 'goal', coords: this.goalPos });
-      const shortestRoute = this.pathfinder.orderWaypointsBrute(waypoints, this.startPos);
-      shortestRoute.push({ name: 'goal', coords: this.goalPos });
-      this.waypointList.innerText = `Shortest route: ${this.getWaypointsAsText(shortestRoute)}`;
-
-      for (const waypoint of shortestRoute) {
-        const delay = await this.getPathToWaypoint(waypoint);
-        await new Promise((resolve) => setTimeout(resolve, delay));
-      }
-    });
-
-    // waypointUI.append(shortestButton);
 
     const resetButton = this.addUIButton('reset', () => {
       this.removeWaypoints();

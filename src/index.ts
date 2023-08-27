@@ -1,6 +1,7 @@
-import { GridMap } from './map';
-import { Feature } from './items';
+import { GridMap } from './Map';
+import { Feature, Actor } from './Items';
 import { UI } from './UI';
+import { MapArray } from './lib/types';
 import './mappy.css';
 
 const app = document.createElement('div');
@@ -17,12 +18,13 @@ const map = new GridMap(mapConfig);
 
 app.append(map.DOMObject);
 
-const start = new Feature('Start', 'lähtö', 'green');
-const end = new Feature('Exit', 'loppu', 'red');
-const kaytava = new Feature('Käytävä', '', '');
-const tiski = new Feature('Tiski', 'tämmönen', 'gray');
-const kaappi = new Feature('Kaappi', 'semmonen', 'blue');
-const mapFeatures = [
+const start = new Feature('start', 'lähtö', { backgroundColor: 'green' }, 'start');
+const end = new Feature('goal', 'loppu', { backgroundColor: 'red' }, 'goal');
+const kaytava = new Feature('Käytävä', '', {});
+const tiski = new Feature('Tiski', 'tämmönen', { backgroundColor: 'darkgray' });
+const kaappi = new Feature('Kaappi', 'semmonen', { backgroundColor: 'blue' });
+
+const mapFeatures: Array<{ id: number; feature: Feature }> = [
   {
     id: 0,
     feature: kaytava,
@@ -61,8 +63,10 @@ const mapArray: MapArray = [
 mapArray.forEach((row, y) => {
   row.forEach((column, x) => {
     if (column > 0) {
-      const { feature } = mapFeatures.find((feature) => feature.id === column);
-      map.addFeature(feature, { x, y });
+      const mapFeature = mapFeatures.find((feature) => feature.id === column);
+      if (mapFeature) {
+        map.addFeature(mapFeature.feature, { x, y });
+      }
     }
   });
 });
@@ -73,4 +77,5 @@ const goalPos = { x: 9, y: 9 };
 map.addFeature(start, startPos);
 map.addFeature(end, goalPos);
 
+/* ui */
 new UI(app, mapArray, startPos, goalPos, map);
