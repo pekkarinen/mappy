@@ -109,7 +109,7 @@ class GridMap {
       feature.element.remove();
       return feature;
     } catch (e) {
-      throw new Error(`no such waypoint or ${e.message}`);
+      throw new Error(`no such feature or ${e.message}`);
     }
   }
 
