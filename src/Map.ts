@@ -35,16 +35,16 @@ class GridMap {
     return this._width;
   }
 
-  get features() {
-    return this._features;
-  }
-
   get tileSize() {
     return this._tileSize;
   }
 
   get DOMObject() {
     return this._DOMObject;
+  }
+
+  get features() {
+    return this._features;
   }
 
   get waypoints() {
