@@ -62,9 +62,13 @@ export class Waypoint extends Feature {
 export class Actor extends Feature {
   constructor(name: string) {
     const style = {
-      borderRadius: '100px',
-      backgroundColor: 'red',
+      fontSize: '32px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      textShadow: '3px 3px 6px rgba(0,0,0,0.2)',
     };
-    super(name, '', style, null, 'actor');
+    const symbol = '🤖';
+    super(name, '', style, symbol, 'actor');
   }
 }
