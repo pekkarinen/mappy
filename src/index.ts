@@ -24,7 +24,7 @@ const kaytava = new Feature('Käytävä', '', {});
 const tiski = new Feature('Tiski', 'tämmönen', { backgroundColor: 'darkgray' });
 const kaappi = new Feature('Kaappi', 'semmonen', { backgroundColor: 'blue' });
 
-const mapFeatures = [
+const mapFeatures: Array<{ id: number; feature: Feature }> = [
   {
     id: 0,
     feature: kaytava,
