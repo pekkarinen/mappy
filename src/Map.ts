@@ -72,13 +72,14 @@ class GridMap {
     try {
       this.checkBounds(coords);
       const element = this.drawFeature(feature, coords);
-      this._features.push({
+      const mapFeature = {
         id: uuidv4(),
         feature,
         coords,
         element,
-      });
-      return { element, coords };
+      };
+      this._features.push(mapFeature);
+      return mapFeature;
     } catch (e) {
       throw new Error(e.message);
     }
