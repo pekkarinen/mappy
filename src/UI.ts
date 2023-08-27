@@ -193,6 +193,7 @@ class UI {
           'path',
           {
             border: '1px solid goldenrod',
+            background: 'rgba(255,0,0,0.1)',
           },
           step
         );
