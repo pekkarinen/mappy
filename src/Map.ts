@@ -13,7 +13,6 @@ class GridMap {
   _tileSize: number;
   _features: Array<MapFeature>;
   _DOMObject: HTMLElement;
-  _waypoints: Array<MapFeature>;
 
   constructor({ height, width, tileSize }: MapConfig) {
     this._height = height;
@@ -21,7 +20,6 @@ class GridMap {
     this._tileSize = tileSize;
     this._DOMObject;
     this._features = [];
-    this._waypoints = [];
     this.create();
   }
 
@@ -45,10 +43,6 @@ class GridMap {
 
   get DOMObject() {
     return this._DOMObject;
-  }
-
-  get waypoints() {
-    return this._features.filter((feature) => feature.element.className === 'waypoint');
   }
 
   /* error handling */
@@ -83,46 +77,51 @@ class GridMap {
     }
   }
 
-  getWaypointsAt(coords: Coords) {
+  getFeaturesAt(coords: Coords) {
     if (coords.x === undefined || coords.y === undefined || coords.x < 0 || coords.y < 0) {
-      console.error('missing or invalid coords!');
-      return [];
+      throw new Error('missing or invalid coords!');
     }
-    return this._waypoints.filter((waypoint) => {
-      return waypoint.coords.x === coords.x && waypoint.coords.y === coords.y;
+    return this.features.filter((feature) => {
+      return feature.coords.x === coords.x && feature.coords.y === coords.y;
     });
   }
 
-  removeWaypoint(index: number) {
+  removeFeature(index: number) {
     try {
-      const waypoint = this._waypoints.splice(index, 1)[0];
-      waypoint.element.remove();
-      return waypoint;
+      const feature = this.features.splice(index, 1)[0];
+      feature.element.remove();
+      return feature;
     } catch (e) {
-      console.error('no such waypoint or', e.message);
-      return false;
+      throw new Error(`no such waypoint or ${e.message}`);
     }
   }
 
+
   drawFeature(feature: Feature, coords: Coords) {
-    const featureObj = document.createElement('div');
-    const featureStyle = {
-      boxSizing: 'border-box',
-      position: 'absolute',
-      width: `${this.tileSize}px`,
-      height: `${this.tileSize}px`,
-      left: `${coords.x * this.tileSize}px`,
-      top: `${coords.y * this.tileSize}px`,
-      ...feature.appearance,
-    };
+    try {
+      this.checkBounds(coords);
+      const featureObj = document.createElement('div');
+      const featureStyle = {
+        boxSizing: 'border-box',
+        position: 'absolute',
+        width: `${this.tileSize}px`,
+        height: `${this.tileSize}px`,
+        left: `${coords.x * this.tileSize}px`,
+        top: `${coords.y * this.tileSize}px`,
+        ...feature.appearance,
+      };
 
-    featureObj.innerText = feature.name;
-    // featureObj.classList.add(`label-order-${feature.textOrder}`);
+      featureObj.innerText = feature.name;
+      const featuresAtPosition = this.getFeaturesAt(coords);
+      featureObj.classList.add(`label-order-${featuresAtPosition.length}`);
 
-    featureObj.classList.add(feature.className);
-    Object.assign(featureObj.style, featureStyle);
-    this.DOMObject.append(featureObj);
-    return featureObj;
+      featureObj.classList.add(feature.className);
+      Object.assign(featureObj.style, featureStyle);
+      this.DOMObject.append(featureObj);
+      return featureObj;
+    } catch (e) {
+      throw new Error(e.message);
+    }
   }
 
   create() {
